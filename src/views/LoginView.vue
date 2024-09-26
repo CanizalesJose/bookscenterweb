@@ -3,7 +3,7 @@
     <HeaderComponent></HeaderComponent>
     <!-- Crear un contenedor alineado al centro -->
     <div class="valign-wrapper loginContainer">
-        <div class="container center-align brown">
+        <div class="container center-align brown z-depth-4">
 
             <!-- Generar un renglon centrado -->
             <div class="row center">
@@ -17,6 +17,8 @@
                     <div class="row"><br></div>
                     
                     <div class="row">
+                        <h4 class="white-text">Iniciar sesión</h4>
+                        <br>
                         <div class="input-field col s12">
                             <i class="material-icons prefix">account_circle</i>
                             <input v-model="username" id="username" name="username" type="text" class="validate" data-length="30" required>
@@ -55,27 +57,41 @@
 </template>
 
 <script setup>
-    /* eslint-disable */
+    /* global M */
     import HeaderComponent from '@/components/HeaderComponent.vue';
-    import { useRouter } from 'vue-router';
     import axios from 'axios';
-    import { ref } from 'vue'
+    import { ref, onBeforeMount } from 'vue'
+    import { useRouter } from 'vue-router';
     const router = useRouter();
 
+    onBeforeMount (() => {
+        const storedToken = localStorage.getItem('token');
+        const storedUsername = localStorage.getItem('username');
+        const storedUsertype = localStorage.getItem('usertype');
+        if (storedToken || storedUsername || storedUsertype){
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('usertype');
+            M.toast({html: 'Sesión cerrada', classes: 'red'});
+        }
+    });
     const username = ref('');
     const password = ref('');
     async function valInput() {
         if (username.value.length != 0 && password.value.length != 0){
             try {
+                let result = await axios.post('http://localhost:5000/api/users/login', {
+                    username: username.value,
+                    password: password.value
+                });
+                // En caso de éxito, en result tenemos el token, el usuario y el usertype
+                localStorage.setItem('token', result.data.token);
+                localStorage.setItem('username', result.data.username);
+                localStorage.setItem('usertype', result.data.usertype);
                 router.push('/');
-                // let result = await axios.post('http://localhost:5000/api/users/login', {
-                //     username: username.value,
-                //     password: password.value
-                // });
-                // console.log(result);
             } catch (error) {
                 if (error.response){
-                    console.log(error.response.data.message);
+                    M.toast({html: error.response.data.message, classes: 'red'});
                     username.value = '';
                     password.value ='';
                 }
@@ -87,17 +103,18 @@
 
 <style scoped>
     .loginContainer {
-        padding-top: 5%;
-        padding-bottom: 5%;
-        padding-left: 10%;
-        padding-right: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 70px);
         width: 100%;
-        height: 100%;
-        position: absolute;
+        padding: 0;
     }
     .loginContainer .container {
-        width: 50%;
-        height: 70%;
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        border-radius: 10px;
     }
 
     .input-field .helper-text {

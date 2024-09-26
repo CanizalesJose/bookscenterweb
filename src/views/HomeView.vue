@@ -51,6 +51,5 @@
 </template>
 
 <script setup>
-/* eslint-disable */
-import HeaderComponent from '@/components/HeaderComponent.vue';
+    import HeaderComponent from '@/components/HeaderComponent.vue';
 </script>
