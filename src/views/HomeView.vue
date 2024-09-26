@@ -1,9 +1,52 @@
 <template>
     <div>
         <HeaderComponent/>
-        <h1>Bienvenido a </h1>
-        <p>Texto de prueba en home</p>
-        <br>
+        <div class="section">
+            <div class="container center">
+                <br><br>
+                <h3 class="header">Bienvenido a BookCenter</h3>
+                <br>
+                <div class="divider"></div>
+                <br>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc diam nisl, tristique non enim ac, ultrices fringilla nibh. Vivamus sodales mi turpis, vel ultrices enim viverra id. Proin pharetra, turpis ut commodo commodo, turpis dui pretium dui, sed interdum sapien neque sed libero. Praesent aliquam risus arcu, vel rhoncus ante porta id. Sed imperdiet mi ut lacus tincidunt tristique. Morbi laoreet nibh sit amet massa elementum, imperdiet porttitor justo aliquam. Nullam vel posuere magna, vitae venenatis orci. Sed finibus, justo vel pellentesque ullamcorper, dui ante imperdiet ex, id pellentesque massa felis eu elit. Donec vel dui posuere sem scelerisque tincidunt bibendum in urna.
+                </p>
+                <p>
+                    Maecenas metus ex, consequat vitae risus egestas, tristique semper purus. Nam facilisis metus sed nisl auctor aliquet. Donec egestas leo ac magna sodales, ac vehicula ipsum malesuada. Vestibulum pellentesque aliquet augue semper elementum. Nulla sit amet cursus tortor, id gravida turpis. Ut eu rhoncus erat, nec tempus tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam dictum magna ac felis maximus semper. Curabitur tempus, risus quis sollicitudin luctus, mauris tortor ultrices dui, eget imperdiet leo quam a odio. Nullam quis pellentesque metus. Ut commodo molestie nisl. Vivamus aliquam tristique consequat. Vivamus non massa lobortis, cursus ligula non, aliquam nunc. Duis dictum mi pellentesque nisl pharetra, quis luctus magna fermentum. Nulla semper, sem at consectetur laoreet, nisl dolor luctus ipsum, vitae vehicula mauris velit at nibh.
+                </p>
+                
+                <div class="divider"></div>
+                <h5 class="header">Top Lecturas del mes</h5>
+                <div class="carousel">
+                    <a class="carousel-item" href="#1">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
+                    </a>
+
+                    <a class="carousel-item" href="#2">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
+                    </a>
+
+                    <a class="carousel-item" href="#3">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
+                    </a>
+
+                    <a class="carousel-item" href="#4">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
+                    </a>
+
+                    <a class="carousel-item" href="#5">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
+                    </a>
+                </div>
+
+                <p>
+                    Donec in sem in libero viverra molestie. Quisque at massa vehicula, consectetur massa in, facilisis urna. Ut sit amet tristique dui. Aenean fringilla nibh at dui mollis, non pharetra magna convallis. Aliquam et volutpat turpis. In vehicula venenatis nisi vitae volutpat. Cras porttitor ligula vel arcu tincidunt condimentum. Curabitur lacinia viverra elit, non ornare enim pretium vel. Nullam tincidunt arcu vitae metus egestas, ut pulvinar ex feugiat. In at rhoncus odio, et tempus nibh. Aenean at fermentum felis, non cursus elit. Nulla tincidunt nec urna non tincidunt.
+                </p>
+                <p>
+                    Suspendisse risus turpis, faucibus nec tristique at, faucibus nec dolor. Vivamus et ultricies enim, id imperdiet elit. Morbi non tincidunt lectus. Nunc volutpat eros a lorem pellentesque, eleifend porta libero euismod. Vestibulum nec fermentum nisl, id hendrerit erat. Vivamus sed pharetra arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Cras tincidunt dignissim ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse potenti. Praesent vitae dignissim felis. Phasellus odio justo, blandit a iaculis in, convallis vel mauris. Maecenas auctor vel risus in elementum. Fusce ut accumsan nulla. Fusce bibendum justo ac lorem volutpat dictum.
+                </p>
+            </div>
+        </div>
     </div>
 </template>
 
