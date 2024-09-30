@@ -14,5 +14,8 @@ module.exports = defineConfig({
       args[0]['__VUE_PROD_HYDRATION_MISMATCH_DETAILS__'] = JSON.stringify(true);
       return args;
     });
+  },
+  devServer: {
+    port: process.env.VUE_APP_DEV_PORT
   }
 });

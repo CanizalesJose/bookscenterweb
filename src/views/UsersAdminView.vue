@@ -216,7 +216,7 @@ onMounted(async () => {
 });
 
 async function fetchUsers(){
-    await axios.get('http://localhost:5000/api/users/findAll', {
+    await axios.get(`${process.env.VUE_APP_API_URL}/users/findAll`, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -260,7 +260,7 @@ async function confirmUpdate(){
         contactNumber: selContactNumber.value,
         email: selEmail.value
     }
-    await axios.patch(`http://localhost:5000/api/users/update/${selUsername.value}`, data, {
+    await axios.patch(`${process.env.VUE_APP_API_URL}/users/update/${selUsername.value}`, data, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -282,7 +282,7 @@ async function deleteModal(username, usertype, contactNumber, email) {
     deleteModal.open();
 }
 async function confirmDelete(){
-    await axios.delete(`http://localhost:5000/api/users/delete/${selUsername.value}`,{
+    await axios.delete(`${process.env.VUE_APP_API_URL}/users/delete/${selUsername.value}`,{
         headers: {
             token: localStorage.getItem('token')
         }
@@ -322,7 +322,7 @@ async function confirmRegister(){
         contactNumber: selContactNumber.value,
         email: selEmail.value
     };
-    await axios.post(`http://localhost:5000/api/users/register/${selUsername.value}`, data, {
+    await axios.post(`${process.env.VUE_APP_API_URL}/users/register/${selUsername.value}`, data, {
         headers: {
             token: localStorage.getItem('token')
         }

@@ -185,7 +185,7 @@ const authorsList = ref([]);
 
 async function fetchAuthors() {
     try {
-        let results = await axios('http://localhost:5000/api/authors/findAll', {
+        let results = await axios(`${process.env.VUE_APP_API_URL}/authors/findAll`, {
             headers: {
                 token: localStorage.getItem('token')
             }
@@ -215,7 +215,7 @@ async function confirmRegister(){
         newFullname: newFullname.value,
         newNationality: newNationality.value
     }
-    await axios.post(`http://localhost:5000/api/authors/register/${newId.value}`, data, {
+    await axios.post(`${process.env.VUE_APP_API_URL}/authors/register/${newId.value}`, data, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -244,7 +244,7 @@ async function confirmUpdate() {
         newFullname: newFullname.value,
         newNationality: newNationality.value
     }
-    await axios.patch(`http://localhost:5000/api/authors/update/${newId.value}`, data, {
+    await axios.patch(`${process.env.VUE_APP_API_URL}/authors/update/${newId.value}`, data, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -269,7 +269,7 @@ async function deleteModal(id, fullname, nationality) {
     deleteModal.open();
 }
 async function confirmDelete() {
-    await axios.delete(`http://localhost:5000/api/authors/delete/${newId.value}`,{
+    await axios.delete(`${process.env.VUE_APP_API_URL}/authors/delete/${newId.value}`,{
         headers: {
             token: localStorage.getItem('token')
         }
