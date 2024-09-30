@@ -52,4 +52,11 @@
 
 <script setup>
     import HeaderComponent from '@/components/HeaderComponent.vue';
+    import { onMounted } from 'vue';
+    /* global M */
+
+    onMounted(async () => {
+        const carouselElems = document.querySelectorAll('.carousel');
+        M.Carousel.init(carouselElems);
+    });
 </script>

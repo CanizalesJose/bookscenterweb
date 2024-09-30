@@ -1,5 +1,5 @@
 <template>
-    <HeaderComponent></HeaderComponent>
+    <HeaderComponent :key="headerKey"></HeaderComponent>
     <div>
     <!-- Botón para abrir el modal -->
         <div class="fixed-action-btn">
@@ -28,7 +28,11 @@
             
             <div class="row" style="padding-left: 10vw; padding-right: 10vw;">
                 <!-- Aqui se genera el catalogo -->
-
+                <BookCardComponent></BookCardComponent>
+                <BookCardComponent></BookCardComponent>
+                <BookCardComponent></BookCardComponent>
+                <BookCardComponent></BookCardComponent>
+                <BookCardComponent></BookCardComponent>
             </div>
         </div>
     </div>
@@ -39,11 +43,21 @@
 /* eslint-disable */
 /* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
-import { ref, onMounted } from 'vue';
+import BookCardComponent from '@/components/BookCardComponent.vue';
+import { ref, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 import axios from 'axios';
 
-onMounted(() => {
-    // Inicializar el modal
+const headerKey = ref(0);
+
+verifyToken(localStorage.getItem('token'), localStorage.getItem('username'), localStorage.getItem('usertype'));
+
+onMounted( async () => {
+    await nextTick();
+    
+    
+    // Inicializar el carrito (modal)
     const modal = document.querySelector('#customModal');
     M.Modal.init(modal);
 });
@@ -51,6 +65,33 @@ onMounted(() => {
 function openModal() {
     const modalInstance = M.Modal.getInstance(document.querySelector('#customModal'));
     modalInstance.open();
+}
+
+async function verifyToken(storedToken, storedUser, storedUsertype){
+    try {
+        if (storedToken && storedUser && storedUsertype){
+            let result = await axios.get('http://localhost:5000/api/users/validToken', {
+                headers: {
+                    token: storedToken
+                }
+            });
+            localStorage.setItem('username', result.data.username);
+            localStorage.setItem('usertype', result.data.usertype);
+        } else {
+            localStorage.removeItem('username');
+            localStorage.removeItem('usertype');
+            localStorage.removeItem('token');
+        }
+    } catch (error) {
+        if (error.status == 401){
+            localStorage.removeItem('username');
+            localStorage.removeItem('usertype');
+            localStorage.removeItem('token');
+            M.toast({html: 'Sesión caducada', classes: 'green'});
+            headerKey.value++;
+        }
+    }
+    
 }
 </script>
 

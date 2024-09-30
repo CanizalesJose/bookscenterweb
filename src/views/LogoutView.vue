@@ -12,7 +12,7 @@
         localStorage.removeItem('token');
         localStorage.removeItem('usertype');
         localStorage.removeItem('username');
-        M.toast({html: 'Sesión cerrada', classes: 'red'});
+        M.toast({html: 'Sesión cerrada', classes: 'deep-purple lighten-2'});
         router.push('/login');
     });
 </script>

@@ -3,7 +3,7 @@
     <HeaderComponent></HeaderComponent>
     <!-- Crear un contenedor alineado al centro -->
     <div class="valign-wrapper loginContainer">
-        <div class="container center-align brown z-depth-4">
+        <div class="container center-align light-blue darken-2 z-depth-4">
 
             <!-- Generar un renglon centrado -->
             <div class="row center">
@@ -21,7 +21,7 @@
                         <br>
                         <div class="input-field col s12">
                             <i class="material-icons prefix">account_circle</i>
-                            <input v-model="username" id="username" name="username" type="text" class="validate" data-length="30" required>
+                            <input v-model="username" id="username" name="username" type="text" data-length="30" required autocomplete="off">
                             <label for="username">Username</label>
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">lock</i>
-                            <input v-model="password" placeholder="Password" id="password" name="password" type="password" class="validate" data-length="16" required>
+                            <input v-model="password" id="password" name="password" type="password" data-length="16" required autocomplete="off">
                             <label for="password">Password</label>
                         </div>
                     </div>
@@ -80,16 +80,20 @@
     async function valInput() {
         if (username.value.length != 0 && password.value.length != 0){
             try {
-                let result = await axios.post('http://localhost:5000/api/users/login', {
-                    username: username.value,
+                let result = await axios.post(`http://localhost:5000/api/users/login/${username.value}`, {
                     password: password.value
                 });
                 // En caso de éxito, en result tenemos el token, el usuario y el usertype
                 localStorage.setItem('token', result.data.token);
                 localStorage.setItem('username', result.data.username);
                 localStorage.setItem('usertype', result.data.usertype);
+                M.toast({html: 'Sesión Iniciada', classes: 'green'});
                 router.push('/');
             } catch (error) {
+                console.log(error);
+                if (error.code == 'ERR_NETWORK'){
+                    M.toast({html: `${error.message}: No se puede conectar a la API`, classes: 'red'});
+                }
                 if (error.response){
                     M.toast({html: error.response.data.message, classes: 'red'});
                     username.value = '';

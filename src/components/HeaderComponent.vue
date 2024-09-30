@@ -1,14 +1,21 @@
 <template>
-    <ul id="adminMenu" class="dropdown-content">
-        <li><a href="#">Usuarios</a></li>
-        <li><a href="#">Categorias</a></li>
-        <li><a href="#">Autores</a></li>
-        <li><a href="#">Libros</a></li>
-        <li><a href="#">Prestamos</a></li>
+    <ul id="adminMenu1" class="dropdown-content">
+        <li><a href="/adminCategories">Categorias</a></li>
+        <li><a href="/adminAuthors">Autores</a></li>
+        <li><a href="/adminBooks">Libros</a></li>
+        <li><a href="/adminLoans">Prestamos</a></li>
+        <li><a href="/adminUsers">Usuarios</a></li>
     </ul>
+    <ul id="adminMenu2" class="dropdown-content">
+        <li><a href="/adminCategories">Categorias</a></li>
+        <li><a href="/adminAuthors">Autores</a></li>
+        <li><a href="/adminBooks">Libros</a></li>
+        <li><a href="/adminLoans">Prestamos</a></li>
+        <li><a href="/adminUsers">Usuarios</a></li>
+    </ul>    
     <div class="navbar-fixed">
         <nav class="custom-nav">
-            <div class="nav-wrapper brown lighten-2">
+            <div class="nav-wrapper light-blue accent-4">
                 <a href="/" class="brand-logo center">
                     <img src="../assets/logo.png">
                 </a>
@@ -21,7 +28,7 @@
                     <li class="hoverable"><a href="/catalog">Catalogo</a></li>
                     <li class="hoverable"><a href="/about">Acerca de...</a></li>
                     <li v-if="usertype=='admin'" class="hoverable">
-                        <a class="dropdown-trigger" data-target="adminMenu">
+                        <a class="dropdown-trigger" data-target="adminMenu1">
                             Administración<i class="material-icons right">arrow_drop_down</i>
                         </a>
                     </li>
@@ -40,6 +47,11 @@
         <li><a href="/">Inicio</a></li>
         <li><a href="/catalog">Catalogo</a></li>
         <li><a href="/about">Acerca de...</a></li>
+        <li v-if="usertype=='admin'" class="hoverable">
+            <a class="dropdown-trigger" data-target="adminMenu2">
+                Administración<i class="material-icons right">arrow_drop_down</i>
+            </a>
+        </li>
         <li v-if="username" style="padding-top: 30px;"><a>{{ username }}</a></li>
         <li v-if="usertype"><a>{{ usertype }}</a></li>
         <li v-else><a href="/login">Iniciar sesión</a></li>
@@ -48,20 +60,25 @@
 </template>
 
 <script setup>
-    import {ref, onMounted} from 'vue';
+    import {ref, onMounted, nextTick} from 'vue';
     /* eslint-disable */
     const username = ref(null);
     const usertype = ref(null);
 
-    onMounted(() =>{
+    onMounted(async () => {
         let storedToken = localStorage.getItem('token');
         const storedUsername = localStorage.getItem('username');
         const storedUsertype = localStorage.getItem('usertype');
-
+        
         if (storedToken && storedUsername && storedUsertype){
             username.value = storedUsername;
             usertype.value = storedUsertype;
+            await nextTick();
+            const dropwonElements = document.querySelectorAll('.dropdown-trigger');
+            M.Dropdown.init(dropwonElements);
         }
+        const sidenavElems = document.querySelectorAll('.sidenav');
+        M.Sidenav.init(sidenavElems);
     });
 
 </script>
