@@ -194,16 +194,15 @@ async function registerModal(id, descr){
     registerModal.open();
 }
 async function fetchCategories(){
-    try {
-        let results = await axios('http://localhost:5000/api/categories/findAll', {
-            headers: {
-                token: localStorage.getItem('token')
-            }
-        });
-        categories.value = results.data;
-    } catch (error) {
-        M.toast({html: `Error en la solicitud: ${error.response.status}`, classes: 'red'});
-    }
+    await axios(`${process.env.VUE_APP_API_URL}/categories/findAll`, {
+        headers: localStorage.getItem('token')
+    })
+    .then(async (res) => {
+        categories.value = res.data;
+    })
+    .catch( error => {
+        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+    });
 }
 
 async function confirmUpdate() {
@@ -264,6 +263,7 @@ async function confirmRegister(){
         M.toast({html: `Categoría creada`, classes: 'green lighten-1'});
     })
     .catch(error => {
+        console.log(error);
         M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red lighten-1'});
     });
 }
