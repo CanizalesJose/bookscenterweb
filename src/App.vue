@@ -33,18 +33,18 @@ async function verifyAdmin(){
         })
         .catch(error => {
             if (error.code=='ERR_NETWORK'){
-                M.toast({html: `${error.message}: No se puede conectar a la API`, classes: 'red lighten-1'});
+                M.toast({html: `${error.message}: No se puede conectar a la API`, classes: 'yellow darken-4'});
                 router.push('/');
             }
             if (error.status == 401){
-                M.toast({html: `Sesión caducada, volver a inicar sesión`, classes: 'red lighten-1'});
+                M.toast({html: `Sesión caducada, volver a inicar sesión`, classes: 'yellow darken-4'});
                 localStorage.removeItem('token');
                 localStorage.removeItem('username');
                 localStorage.removeItem('usertype');
                 router.push('/login');
             }
             if (error.status == 403){
-                M.toast({html: `Privilegios insuficientes: inciar sesión con usuario administrador`, classes: 'red lighten-1'});
+                M.toast({html: `Privilegios insuficientes: inciar sesión con usuario administrador`, classes: 'yellow darken-4'});
                 router.push('/')
             }
             valid = false;
