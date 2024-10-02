@@ -22,7 +22,7 @@ async function verifyAdmin(){
         router.push('/login');
         valid = false;
     }else{
-        await axios('http://localhost:5000/api/users/validAdmin',{
+        await axios(`${process.env.VUE_APP_API_URL}/users/validAdmin`,{
             headers: {
                 token: localStorage.getItem('token')
             }
@@ -32,6 +32,10 @@ async function verifyAdmin(){
                 valid = true;
         })
         .catch(error => {
+            if (error.code=='ERR_NETWORK'){
+                M.toast({html: `${error.message}: No se puede conectar a la API`, classes: 'red lighten-1'});
+                router.push('/');
+            }
             if (error.status == 401){
                 M.toast({html: `Sesión caducada, volver a inicar sesión`, classes: 'red lighten-1'});
                 localStorage.removeItem('token');
