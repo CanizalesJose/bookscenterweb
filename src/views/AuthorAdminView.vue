@@ -1,7 +1,7 @@
 <template>
     <HeaderComponent></HeaderComponent>
     <div class="fixed-action-btn">
-        <a @click="registerModal('', '', '')" class="btn-floating btn-large green lighten-1">
+        <a @click="registerModal('', '')" class="btn-floating btn-large green lighten-1">
             <i class="large material-icons">add</i>
         </a>
     </div>
@@ -10,8 +10,6 @@
         <div class="modal-content">
             <h4>Confirmar registro</h4>
             <div class="divider"></div>
-            <label for="newId">Nuevo Id:</label>
-            <input v-model="newId" id="newId" autocomplete="off">
             <label for="newFullname">Nombre completo:</label>
             <input v-model="newFullname" id="newFullname" autocomplete="off">
             <label for="newNationality">Nacionalidad</label>
@@ -20,14 +18,12 @@
             <table class="responsive-table">
                 <thead>
                     <tr>
-                        <th>Id</th>
                         <th>Nombre completo</th>
                         <th>Nacionalidad</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ newId }}</td>
                         <td>{{ newFullname }}</td>
                         <td>{{ newNationality }}</td>
                     </tr>
@@ -209,32 +205,50 @@ async function initModals() {
     const parallaxElems = document.querySelectorAll('.parallax');
     M.Parallax.init(parallaxElems);
 }
-async function registerModal(id, fullname, nationality){
-    newId.value = id;
+function checkData(){
+    let pass = true;
+    if (!newFullname.value){
+        M.toast({html: 'El nombre no puede estar vacío.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (newFullname.value && newFullname.value.length > 100){
+        M.toast({html: 'El nombre no puede superar los 100 caracteres.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (!newNationality.value){
+        M.toast({html: 'La nacionalidad no puede estar vacío.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (newNationality.value && newNationality.value.length > 100){
+        M.toast({html: 'La nacionalidad no puede superar los 100 caracteres.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    return pass;
+}
+async function registerModal(fullname, nationality){
+    newId.value = null;
     newFullname.value = fullname;
     newNationality.value = nationality;
     const registerModal = M.Modal.getInstance(document.querySelector('#registerModal'));
     registerModal.open();
 }
 async function confirmRegister(){
-    if (!newId.value){
-        M.toast({html: 'El ID no puede estar vacío.', classes: 'red lighten-1'});
+    if (!checkData())
         return;
-    }
     let data = {
         newFullname: newFullname.value,
         newNationality: newNationality.value
     }
-    await axios.post(`${process.env.VUE_APP_API_URL}/authors/register/${newId.value}`, data, {
+    await axios.post(`${process.env.VUE_APP_API_URL}/authors/register`, data, {
         headers: {
             token: localStorage.getItem('token')
         }
     })
-    .then( () => {
+    .then( res => {
         authorsList.value.push({
-            id: newId.value,
-            fullName: newFullname.value,
-            nationality: newNationality.value
+            id: res.data.author.id,
+            fullName: res.data.author.fullName,
+            nationality: res.data.author.nationality
         });
         M.toast({html: `Autor agregado`, classes: 'green lighten-1'});
     })
@@ -250,6 +264,8 @@ async function updateModal(id, fullname, nationality) {
     updateModal.open();
 }
 async function confirmUpdate() {
+    if (!checkData())
+        return;
     let data = {
         newFullname: newFullname.value,
         newNationality: newNationality.value

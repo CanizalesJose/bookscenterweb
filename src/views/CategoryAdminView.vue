@@ -1,7 +1,7 @@
 <template>
     <HeaderComponent></HeaderComponent>
     <div class="fixed-action-btn">
-        <a @click="registerModal('', '')" class="btn-floating btn-large green lighten-1">
+        <a @click="registerModal('')" class="btn-floating btn-large green lighten-1">
             <i class="large material-icons">add</i>
         </a>
     </div>
@@ -128,21 +128,17 @@
         <div class="modal-content">
             <h4>Confirmar registro</h4>
             <div class="divider"></div>
-            <label for="newId">Nuevo Id:</label>
-            <input v-model="newId" id="newId" autocomplete="off">
             <label for="newDescr2">Nueva descripción o nombre:</label>
             <input v-model="newDescr" id="newDescr2" autocomplete="off">
             <p>¿Estás seguro de querer crear esta categoría?</p>
             <table>
                 <thead>
                     <tr>
-                        <th>Id</th>
                         <th>Descripción o nombre</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ newId }}</td>
                         <td>{{ newDescr }}</td>
                     </tr>
                 </tbody>
@@ -183,6 +179,18 @@ async function initModals() {
     const modalElems = document.querySelectorAll('.modal');
     M.Modal.init(modalElems);
 }
+function checkData(descr){
+    let pass = true;
+    if (!descr){
+        M.toast({html: 'La descripción no puede estar vacía.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (descr && descr.length > 100){
+        M.toast({html: 'La descripción no puede estar vacía.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    return pass;
+}
 async function updateModal(id, descr) {
     selectedId.value = id;
     selectedDscr.value = descr;
@@ -195,8 +203,8 @@ async function deleteModal(id, descr) {
     const deleteModal = M.Modal.getInstance(document.querySelector('#deleteModal'));
     deleteModal.open();
 }
-async function registerModal(id, descr){
-    newId.value = id;
+async function registerModal(descr){
+    newId.value = null;
     newDescr.value = descr;
     const registerModal = M.Modal.getInstance(document.querySelector('#registerModal'));
     registerModal.open();
@@ -212,14 +220,16 @@ async function fetchCategories(){
     })
     .catch( error => {
         if (error.response.data){
-            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
         } else{
-            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
         }
     });
 }
 
 async function confirmUpdate() {
+    if (checkData(selectedDscr.value) == false)
+        return;
     let data = {
         descr: selectedDscr.value
     }
@@ -237,9 +247,9 @@ async function confirmUpdate() {
     })
     .catch(error => {
         if (error.response.data)
-            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
         else
-            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
     });
 }
 async function confirmDelete(){
@@ -252,42 +262,40 @@ async function confirmDelete(){
         let index = categories.value.findIndex(category => category.id === selectedId.value);
         if (index != -1){
             categories.value.splice(index, 1);
-            M.toast({html: `Categoría eliminada`, classes: 'red lighten-1'});
+            M.toast({html: `Categoría eliminada`, classes: 'red darken-4'});
         }
     })
     .catch(error => {
         if (error.response.data)
-            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
         else
-            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
     });
 }
 async function confirmRegister(){
-    if (!newId.value){
-        M.toast({html: `El ID no puede estar vacío`, classes: 'red lighten-1'});
+    if (checkData(newDescr.value) == false)
         return;
-    }
     const data = {
         descr: newDescr.value
     }
-    await axios.post(`${process.env.VUE_APP_API_URL}/categories/register/${newId.value}`, data, {
+    await axios.post(`${process.env.VUE_APP_API_URL}/categories/register`, data, {
         headers: {
             token: localStorage.getItem('token')
         }
     })
-    .then( () => {
+    .then( (res) => {
         categories.value.push({
-            id: newId.value,
-            descr: newDescr.value
+            id: res.data.category.id,
+            descr: res.data.category.descr
         });
         M.toast({html: `Categoría creada`, classes: 'green lighten-1'});
     })
     .catch(error => {
         console.log(error);
         if (error.response.data)
-            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
         else
-            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
     });
 }
 </script>

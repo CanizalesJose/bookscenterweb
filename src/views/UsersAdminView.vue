@@ -149,7 +149,7 @@
             <div class="section center">
                 <h3>Usuarios</h3>
                 <br>
-                <p>En este apartado es posible administrar libremente a todos los usuarios registrados, así como ascenderlos a administradores, en caso de ser necesario</p>
+                <p>En este apartado es posible administrar libremente a todos los usuarios registrados, así como promoverlos a administradores, en caso de ser necesario</p>
                 <p>Si alguien ha perdido su contraseña este es el lugar donde se puede cambiar.</p>
             </div>
             <div class="divider"></div>
@@ -217,6 +217,9 @@ const selPassword = ref(null);
 const selUsertype = ref(null);
 const selContactNumber = ref(null);
 const selEmail = ref(null);
+const checkEmail = /^[a-zA-Z0-9]+\@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
+const checkNumber = /^[0-9]{10}|[0-9]{3}-[0-9]{3}-[0-9]{4}$/
+
 
 onMounted(async () => {
     if (!await verifyAdmin())
@@ -235,7 +238,7 @@ async function fetchUsers(){
         usersList.value = res.data;
     })
     .catch(error => {
-        M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red lighten-1'});
+        M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
     });
 }
 
@@ -253,6 +256,45 @@ function reInitSelect() {
     const selectElems = document.querySelectorAll('select');
     M.FormSelect.init(selectElems);
 }
+function checkData(){
+    let pass = true;
+    if (!selUsername.value){
+        M.toast({html: 'El nombre de usuario no puede estar vacío.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (selUsername.value && selUsername.value.length > 30){
+        M.toast({html: 'El nombre de usuario no puede ser mayor a 30 caracteres.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (selPassword.value && selPassword.value.length > 100){
+        M.toast({html: 'La contraseña no puede ser mayor a 100 caracteres.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (!selUsertype.value){
+        M.toast({html: 'Se debe seleccionar un tipo de usuario', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (!selContactNumber.value){
+        pass = false;
+    }
+    if (selContactNumber.value && !checkNumber.test(selContactNumber.value)){
+        M.toast({html: 'El número debe seguir el formato 1234567890 o 123-123-1234.', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (!selEmail.value){
+        M.toast({html: 'El email no puede estar vacío', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (selEmail.value && selEmail.value.length > 100){
+        M.toast({html: 'El email debe tener menos de 100 caracteres', classes: 'red lighten-1'});
+        pass = false;
+    }
+    if (selEmail.value && !checkEmail.test(selEmail.value)){
+        M.toast({html: `Email debe tener el formato: example@email.xyz`, classes: `red lighten-1`});
+        pass = false;
+    }
+    return pass;
+}
 async function updateModal(username, password, usertype, contactNumber, email) {
     selUsername.value = username;
     selPassword.value = password;
@@ -266,6 +308,8 @@ async function updateModal(username, password, usertype, contactNumber, email) {
     }, 0);
 }
 async function confirmUpdate(){
+    if (!checkData())
+        return;
     let data = {
         password: selPassword.value,
         usertype: selUsertype.value,
@@ -304,7 +348,7 @@ async function confirmDelete(){
         let index = usersList.value.findIndex(user => user.username === selUsername.value);
         if (index != -1){
             usersList.value.splice(index, 1);
-            M.toast({html: `Usuario eliminado`, classes: 'red lighten-1'});
+            M.toast({html: `Usuario eliminado`, classes: 'red darken-4'});
         }
     })
     .catch(error => {
@@ -324,10 +368,14 @@ async function registerModal(username, password, usertype, contactNumber, email)
     }, 0);
 }
 async function confirmRegister(){
-    if (!selUsername){
-        M.toast({html: 'El nombre de usuario no puede estar vacío.', classes: 'red lighten-1'});
-        return;
+    let pass = true;
+    pass = checkData();
+    if (!selPassword.value){
+        M.toast({html: 'La contraseña no puede estar vacía.', classes: 'red lighten-1'});
+        pass = false
     }
+    if (!pass)
+        return;
     let data = {
         password: selPassword.value,
         usertype: selUsertype.value,
