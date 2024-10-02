@@ -11,41 +11,14 @@
 </template>
 
 <script setup>
-/* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
-import { useRouter } from 'vue-router';
-const router = useRouter();
-import axios from 'axios';
-verifyAdmin();
+import { inject, onMounted } from 'vue';
 
-async function verifyAdmin(){
-    if (!localStorage.getItem('token')){
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('usertype');
-        M.toast({html: 'Página protegida: accede con un usuario administrador', classes: 'yellow darken-4'});
-        router.push('/login');
-    }else{
-        try {
-            await axios('http://localhost:5000/api/users/validAdmin',{
-                headers: {
-                    token: localStorage.getItem('token')
-                }
-            });
-        } catch (error) {
-            if (error.status == 401){
-                localStorage.removeItem('token');
-                localStorage.removeItem('username');
-                localStorage.removeItem('usertype');
-                M.toast({html: 'Sesión caducada: accede con un usuario administrador', classes: 'yellow darken-4'});
-                router.push('/login');
-            }
-            if (error.status == 403){
-                M.toast({html: 'Página protegida: solo administradores', classes: 'yellow darken-4'});
-                router.push('/');
-            }
-        }
-    }
-}
+const verifyAdmin = inject('verifyAdmin');
+
+onMounted(async () => {
+    if (!verifyAdmin())
+        return;
+});
 
 </script>

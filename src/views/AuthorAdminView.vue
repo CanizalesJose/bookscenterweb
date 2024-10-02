@@ -125,7 +125,13 @@
             </div>
             <div class="divider"></div>
         </div>
-
+    </div>
+    <div class="parallax-container">
+        <div class="parallax">
+            <img src="https://images.freeimages.com/images/large-previews/169/writing-1245534.jpg?fmt=webp&h=350">
+        </div>
+    </div>
+    <div class="container">
         <div class="row">
             <div class="section center">
                 <h3>Administrar autores</h3>
@@ -162,6 +168,7 @@
             </div>
         </div>
     </div>
+    <FooterComponent imageSrc="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></FooterComponent>
 </template>
 
 <script setup>
@@ -169,6 +176,7 @@
 import HeaderComponent from '@/components/HeaderComponent.vue';
 import { ref, onMounted, inject} from 'vue';
 import axios from 'axios';
+import FooterComponent from '@/components/FooterComponent.vue';
 
 onMounted( async () => {
     if (!await verifyAdmin())
@@ -198,6 +206,8 @@ async function fetchAuthors() {
 async function initModals() {
     const modalElems = document.querySelectorAll('.modal');
     M.Modal.init(modalElems);
+    const parallaxElems = document.querySelectorAll('.parallax');
+    M.Parallax.init(parallaxElems);
 }
 async function registerModal(id, fullname, nationality){
     newId.value = id;
@@ -300,5 +310,12 @@ table th, table td {
     text-align: center;
     vertical-align: middle;
     padding: 10px;
+}
+.parallax-container {
+    width: 100%;
+}
+.parallax {
+    width: 100%;
+    height: auto;
 }
 </style>

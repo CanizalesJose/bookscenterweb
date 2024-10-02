@@ -19,7 +19,13 @@
             </div>
             <div class="divider"></div>
         </div>
-
+    </div>
+    <div class="parallax-container">
+        <div class="parallax">
+            <img src="https://images.unsplash.com/photo-1626473401833-a07f0acbe6ed?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+        </div>
+    </div>
+    <div class="container">
         <div class="row">
             <div class="container">
                 <div class="section center">
@@ -148,11 +154,13 @@
             <a href="#!" @click="confirmRegister" class="modal-close waves-effect waves-green btn-flat">Registrar</a>
         </div>
     </div>
+    <FooterComponent imageSrc="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></FooterComponent>
 </template>
 
 <script setup>
 /* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
 import {ref, onMounted, inject} from 'vue';
 import axios from 'axios';
 
@@ -167,7 +175,7 @@ onMounted(async () => {
     if (!await verifyAdmin()){
         return;
     }
-    fetchCategories();
+    await fetchCategories();
     initModals();
 });
 
@@ -194,14 +202,20 @@ async function registerModal(id, descr){
     registerModal.open();
 }
 async function fetchCategories(){
-    await axios(`${process.env.VUE_APP_API_URL}/categories/findAll`, {
-        headers: localStorage.getItem('token')
+    await axios.get(`${process.env.VUE_APP_API_URL}/categories/find/All`, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
     })
-    .then(async (res) => {
+    .then(async res => {
         categories.value = res.data;
     })
     .catch( error => {
-        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+        if (error.response.data){
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+        } else{
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
+        }
     });
 }
 
@@ -209,7 +223,7 @@ async function confirmUpdate() {
     let data = {
         descr: selectedDscr.value
     }
-    await axios.patch(`http://localhost:5000/api/categories/update/${selectedId.value}`, data, {
+    await axios.patch(`${process.env.VUE_APP_API_URL}/categories/update/${selectedId.value}`, data, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -222,11 +236,14 @@ async function confirmUpdate() {
         M.toast({html: `Categoría actualizada`, classes: 'green lighten-1'});
     })
     .catch(error => {
-        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+        if (error.response.data)
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+        else
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
     });
 }
 async function confirmDelete(){
-    await axios.delete(`http://localhost:5000/api/categories/delete/${selectedId.value}`,{
+    await axios.delete(`${process.env.VUE_APP_API_URL}/categories/delete/${selectedId.value}`,{
         headers: {
             token: localStorage.getItem('token')
         }
@@ -239,7 +256,10 @@ async function confirmDelete(){
         }
     })
     .catch(error => {
-        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+        if (error.response.data)
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+        else
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
     });
 }
 async function confirmRegister(){
@@ -250,7 +270,7 @@ async function confirmRegister(){
     const data = {
         descr: newDescr.value
     }
-    await axios.post(`http://localhost:5000/api/categories/register/${newId.value}`, data, {
+    await axios.post(`${process.env.VUE_APP_API_URL}/categories/register/${newId.value}`, data, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -264,7 +284,10 @@ async function confirmRegister(){
     })
     .catch(error => {
         console.log(error);
-        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red lighten-1'});
+        if (error.response.data)
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+        else
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
     });
 }
 </script>
