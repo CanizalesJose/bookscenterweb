@@ -69,7 +69,7 @@
             <label>Nuevo correo electronico</label>
             <input v-model="selEmail" autocomplete="off">
             <label>Nueva contraseña</label>
-            <input class="tooltipped" data-position="left" data-tooltip="Dejar vacío para no cambiar" v-model="selPassword" autocomplete="off">
+            <input class="tooltipped" type="password" data-position="left" data-tooltip="Dejar vacío para no cambiar" v-model="selPassword" autocomplete="off">
             <label>Nuevo tipo de usuario:</label>
             <select v-model="selUsertype">
                 <option value="admin">Administrador</option>
@@ -275,6 +275,7 @@ function checkData(){
         pass = false;
     }
     if (!selContactNumber.value){
+        M.toast({html: 'El número de contacto no puede estar vacío', classes: 'red lighten-1'});
         pass = false;
     }
     if (selContactNumber.value && !checkNumber.test(selContactNumber.value)){

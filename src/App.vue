@@ -11,13 +11,16 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 const router = useRouter();
 
+function clearSession(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('usertype');
+}
 
 async function verifyAdmin(){
   let valid = false;
     if (!localStorage.getItem('token')){
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('usertype');
+        clearSession();
         M.toast({html: 'Página protegida: accede con un usuario administrador', classes: 'yellow darken-4'});
         router.push('/login');
         valid = false;
@@ -38,9 +41,7 @@ async function verifyAdmin(){
             }
             if (error.status == 401){
                 M.toast({html: `Sesión caducada, volver a inicar sesión`, classes: 'yellow darken-4'});
-                localStorage.removeItem('token');
-                localStorage.removeItem('username');
-                localStorage.removeItem('usertype');
+                clearSession();
                 router.push('/login');
             }
             if (error.status == 403){
@@ -53,5 +54,37 @@ async function verifyAdmin(){
     return valid;
 }
 
+async function verifyUser(){
+    let pass = false;
+    if (!localStorage.getItem('token'))
+        return false;
+    await axios.get(`${process.env.VUE_APP_API_URL}/users/validToken`, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(res => {
+        localStorage.setItem('username', res.data.user.username);
+        localStorage.setItem('usertype', res.data.user.usertype);
+        pass = true;
+    })
+    .catch(error => {
+        if (error.code=='ERR_NETWORK'){
+                M.toast({html: `${error.message}: No se puede conectar a la API`, classes: 'yellow darken-4'});
+                clearSession();
+                router.push('/');
+                pass = false;
+        }
+        if (error.status == 401){
+            M.toast({html: `Sesión caducada, volver a inicar sesión`, classes: 'yellow darken-4'});
+            clearSession();
+            router.push('/login');
+            pass = false;
+        }
+    });
+    return pass;
+}
+
+provide('verifyUser', verifyUser);
 provide('verifyAdmin', verifyAdmin);
 </script>

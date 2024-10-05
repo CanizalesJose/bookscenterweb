@@ -1,5 +1,5 @@
 <template>
-    <HeaderComponent :key="headerKey"></HeaderComponent>
+    <HeaderComponent></HeaderComponent>
     <div>
     <!-- Botón para abrir el modal -->
         <div class="fixed-action-btn">
@@ -36,63 +36,32 @@
             </div>
         </div>
     </div>
-    
+    <FooterComponent imageSrc="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></FooterComponent>
 </template>
 
 <script setup>
 /* eslint-disable */
 /* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
 import BookCardComponent from '@/components/BookCardComponent.vue';
-import { ref, onMounted, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
-const router = useRouter();
-import axios from 'axios';
+import { onMounted, inject} from 'vue';
 
-const headerKey = ref(0);
+const verifyUser = inject('verifyUser');
 
-verifyToken(localStorage.getItem('token'), localStorage.getItem('username'), localStorage.getItem('usertype'));
-
-onMounted( async () => {
-    await nextTick();
-    
-    
-    // Inicializar el carrito (modal)
+onMounted(async () => {
+    await verifyUser();
+    await initMaterialize();
+});
+function initMaterialize(){
     const modal = document.querySelector('#customModal');
     M.Modal.init(modal);
-});
-
+}
 function openModal() {
     const modalInstance = M.Modal.getInstance(document.querySelector('#customModal'));
     modalInstance.open();
 }
 
-async function verifyToken(storedToken, storedUser, storedUsertype){
-    try {
-        if (storedToken && storedUser && storedUsertype){
-            let result = await axios.get('http://localhost:5000/api/users/validToken', {
-                headers: {
-                    token: storedToken
-                }
-            });
-            localStorage.setItem('username', result.data.username);
-            localStorage.setItem('usertype', result.data.usertype);
-        } else {
-            localStorage.removeItem('username');
-            localStorage.removeItem('usertype');
-            localStorage.removeItem('token');
-        }
-    } catch (error) {
-        if (error.status == 401){
-            localStorage.removeItem('username');
-            localStorage.removeItem('usertype');
-            localStorage.removeItem('token');
-            M.toast({html: 'Sesión caducada', classes: 'green'});
-            headerKey.value++;
-        }
-    }
-    
-}
 </script>
 
 <style scoped>

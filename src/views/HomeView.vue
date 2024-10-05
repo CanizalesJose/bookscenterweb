@@ -48,15 +48,18 @@
             </div>
         </div>
     </div>
+    <FooterComponent imageSrc="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></FooterComponent>
 </template>
 
 <script setup>
-    import HeaderComponent from '@/components/HeaderComponent.vue';
-    import { onMounted } from 'vue';
-    /* global M */
-
-    onMounted(async () => {
-        const carouselElems = document.querySelectorAll('.carousel');
-        M.Carousel.init(carouselElems);
-    });
+import FooterComponent from '@/components/FooterComponent.vue';
+import HeaderComponent from '@/components/HeaderComponent.vue';
+import { onMounted, inject } from 'vue';
+/* global M */
+const verifyUser = inject('verifyUser');
+onMounted(async () => {
+    await verifyUser();
+    const carouselElems = document.querySelectorAll('.carousel');
+    M.Carousel.init(carouselElems);
+});
 </script>
