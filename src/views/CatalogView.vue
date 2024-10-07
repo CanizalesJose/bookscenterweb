@@ -26,36 +26,49 @@
                 <h3>Catalogo</h3>
             </div>
             
-            <div class="row" style="padding-left: 10vw; padding-right: 10vw;">
+            <div v-for="book in bookList" :key="book.id">
                 <!-- Aqui se genera el catalogo -->
-                <BookCardComponent></BookCardComponent>
-                <BookCardComponent></BookCardComponent>
-                <BookCardComponent></BookCardComponent>
-                <BookCardComponent></BookCardComponent>
-                <BookCardComponent></BookCardComponent>
+                 <!-- {{ book.title }} -->
             </div>
         </div>
     </div>
-    <FooterComponent imageSrc="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></FooterComponent>
 </template>
 
 <script setup>
 /* eslint-disable */
 /* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
-import FooterComponent from '@/components/FooterComponent.vue';
-import BookCardComponent from '@/components/BookCardComponent.vue';
-import { onMounted, inject} from 'vue';
+import { onMounted, inject, ref} from 'vue';
+import axios from 'axios';
 
 const verifyUser = inject('verifyUser');
+const bookList = ref([]);
 
 onMounted(async () => {
     await verifyUser();
     await initMaterialize();
+    await fetchBooks();
 });
 function initMaterialize(){
     const modal = document.querySelector('#customModal');
     M.Modal.init(modal);
+}
+async function fetchBooks(){
+    await axios.get(`${process.env.VUE_APP_API_URL}/books/findAll`, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(async res => {
+        bookList.value = res.data;
+    })
+    .catch(() => {
+        if (error.response.data){
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+        } else{
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
+        }
+    });
 }
 function openModal() {
     const modalInstance = M.Modal.getInstance(document.querySelector('#customModal'));

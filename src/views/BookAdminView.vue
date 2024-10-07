@@ -39,6 +39,8 @@
                 </option>
              </select>
             <br>
+            <label>Copias:</label>
+            <input type="number" autocomplete="off" v-model="selCopies">
 
             <p>¿Estás seguro de querer crear este libro?</p>
             <table class="responsive-table">
@@ -52,7 +54,7 @@
                         <th>Editora</th>
                         <th>Año de publicación</th>
                         <th>Categoría</th>
-                        
+                        <th>Copias</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,6 +69,7 @@
                          <td>{{ selPublisher }}</td>
                          <td>{{ selPublishYear }}</td>
                          <td>{{ selDescr }}<br>({{ selCategory }})</td>
+                         <td>{{ selCopies }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -106,17 +109,19 @@
             <label>Año de publicación</label>
             <input v-model="selPublishYear" type="number" autocomplete="off">
             <!-- Category selector -->
-             <br>
-             <label>Categoría</label>
-             <select v-model="selCategory" @change="updateCategorySelection">
+            <br>
+            <label>Categoría</label>
+            <select v-model="selCategory" @change="updateCategorySelection">
                 <option :value="selCategory" selected disabled>
                     {{ selDescr }}
                 </option>
                 <option v-for="category in categoriesList" :key="category.id" :value="JSON.stringify({id: category.id, descr: category.descr})">
                     {{ category.descr }}
                 </option>
-             </select>
+            </select>
             <br>
+            <label>Copias en inventario:</label>
+            <input v-model="selCopies" type="number" autocomplete="off">
             
 
             <p>¿Estás seguro de querer actualizar este registro?</p>
@@ -226,13 +231,14 @@
                 <thead>
                     <tr>
                         <th>Portada</th>
-                        <th>Id</th>
-                        <th>Titulo</th>
                         <th>ISBN</th>
+                        <th>Titulo</th>
                         <th>Autor</th>
                         <th>Editora</th>
                         <th>Año</th>
                         <th>Categoría</th>
+                        <th>Copias</th>
+                        <th>Copias prestadas</th>
                         <th>Actualizar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -241,20 +247,21 @@
                     <!-- Generar registros de tabla dinámicamente -->
                     <tr v-for="book in booksList" :key="book.id">
                         <td><img class="listCover" v-bind:src="book.imageUrl" v-bind:alt="book.title"></td>
-                        <td>{{ book.id}}</td>
-                        <td>{{ book.title }}</td>
                         <td>{{ book.isbn }}</td>
-                        <td>{{ book.fullname }}</td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.fullName }}</td>
                         <td>{{ book.publisher }}</td>
                         <td>{{ book.publishYear }}</td>
                         <td>{{ book.descr }}</td>
+                        <td>{{ book.copies }}</td>
+                        <td>{{ book.loanCopies }}</td>
                         <td>
-                            <button @click="updateModal(book.id, book.title, book.isbn, book.author, book.fullname, book.publisher, book.publishYear, book.category, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light green lighten-1 hoverable">
+                            <button @click="updateModal(book.id, book.title, book.isbn, book.author, book.fullName, book.publisher, book.publishYear, book.category, book.copies, book.loanCopies, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light green lighten-1 hoverable">
                                 <i class="material-icons prefix">edit</i>
                             </button>
                         </td>
                         <td>
-                            <button @click="deleteModal(book.id, book.title, book.isbn, book.author, book.fullname, book.publisher, book.publishYear, book.category, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light red lighten-1 hoverable">
+                            <button @click="deleteModal(book.id, book.title, book.isbn, book.author, book.fullName, book.publisher, book.publishYear, book.category, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light red lighten-1 hoverable">
                                 <i class="material-icons prefix">delete</i>
                             </button>
                         </td>
@@ -263,19 +270,16 @@
             </table>
         </div>
     </div>
-    <FooterComponent imageSrc="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></FooterComponent>
 </template>
 
 <script setup>
 /* eslint-disable */
 /* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
-import FooterComponent from '@/components/FooterComponent.vue';
 import axios from 'axios';
 import { onMounted, inject, ref } from 'vue';
 
 const verifyAdmin = inject('verifyAdmin');
-
 const selId = ref(null);
 const selTitle = ref(null);
 const selIsbn = ref(null);
@@ -285,8 +289,9 @@ const selPublisher = ref(null);
 const selPublishYear = ref(null);
 const selCategory = ref(null);
 const selDescr = ref(null);
+const selCopies = ref(null);
+const selLoanCopies = ref(null);
 const selImageUrl = ref(null);
-
 const booksList = ref([]);
 const categoriesList = ref([]);
 const authorsList = ref([]);
@@ -299,7 +304,7 @@ onMounted(async () => {
 });
 
 async function fetchBooks(){
-    await axios.get(`${process.env.VUE_APP_API_URL}/books/find/All`,{
+    await axios.get(`${process.env.VUE_APP_API_URL}/books/findAll`,{
         headers: {
             token: localStorage.getItem('token')
         }
@@ -380,6 +385,8 @@ async function registerModal(){
     selPublisher.value = null;
     selPublishYear.value = null;
     selCategory.value = null;
+    selCopies.value = null;
+    selLoanCopies.value = null;
     selDescr.value = null;
     selImageUrl.value = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s';
     const registerModal = M.Modal.getInstance(document.querySelector('#registerModal'));
@@ -416,6 +423,10 @@ async function confirmRegister(){
         pass = false;
         M.toast({html: 'La categoría no puede estar vacía', classes: 'red lighten-1'});
     }
+    if (!selCopies.value){
+        pass = false;
+        M.toast({html: 'El campo copias debe tener un valor', classes: 'red lighten-1'});
+    }
     if (!pass)
         return;
     let data = {
@@ -425,6 +436,7 @@ async function confirmRegister(){
         publisher: selPublisher.value,
         publishYear: selPublishYear.value,
         category: selCategory.value,
+        copies: selCopies.value,
         imageUrl: selImageUrl.value
     }
     await axios.post(`${process.env.VUE_APP_API_URL}/books/register`, data, {
@@ -432,24 +444,15 @@ async function confirmRegister(){
             token: localStorage.getItem('token')
         }
     })
-    .then(res => {
+    .then(async res => {
         M.toast({html: `${res.data.message}`, classes: 'green lighten-1'});
-        booksList.value.push({
-            id: res.data.book.id,
-            title: selTitle.value,
-            isbn: selIsbn.value,
-            fullname: selFullname.value,
-            publisher: selPublisher.value,
-            publishYear: selPublishYear.value,
-            descr: selDescr.value,
-            imageUrl: res.data.book.imageUrl
-        });
+        await fetchBooks();
     })
     .catch(error => {
         M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
     });
 }
-async function updateModal(id, title, isbn, author, fullname, publisher, publishYear, category, descr, imageUrl){
+async function updateModal(id, title, isbn, author, fullname, publisher, publishYear, category, copies, loanCopies, descr, imageUrl){
     selId.value = id;
     selTitle.value = title;
     selIsbn.value = isbn;
@@ -458,6 +461,8 @@ async function updateModal(id, title, isbn, author, fullname, publisher, publish
     selPublisher.value = publisher;
     selPublishYear.value = publishYear;
     selCategory.value = category;
+    selCopies.value = copies;
+    selLoanCopies.value = loanCopies;
     selDescr.value = descr;
     selImageUrl.value = imageUrl;
     const updateModal = M.Modal.getInstance(document.querySelector('#updateModal'));
@@ -476,6 +481,8 @@ async function confirmUpdate(){
         publisher: selPublisher.value,
         publishYear: selPublishYear.value,
         category: selCategory.value,
+        copies: selCopies.value,
+        loanCopies: selLoanCopies.value,
         imageUrl: selImageUrl.value
     }
     await axios.patch(`${process.env.VUE_APP_API_URL}/books/update/${selId.value}`, data, {

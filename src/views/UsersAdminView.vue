@@ -175,6 +175,7 @@
                         <th>Tipo de usuario</th>
                         <th>Numero Telefonico</th>
                         <th>Correo Electronico</th>
+                        <th>Entregas atrasadas</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -183,6 +184,10 @@
                         <td>{{ user.usertype }}</td>
                         <td>{{ user.contactNumber }}</td>
                         <td>{{ user.email }}</td>
+                        <td>
+                            <div v-if="user.penalized">Si</div>
+                            <div v-else>No</div>
+                        </td>
                         <td>
                             <button @click="updateModal(user.username, null, user.usertype, user.contactNumber, user.email)" class="btn-floating waves-effect waves-light green lighten-1">
                                 <i class="material-icons prefix">edit</i>
@@ -198,15 +203,12 @@
             </table>
         </div>
     </div>
-
-    <FooterComponent imageSrc="https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></FooterComponent>
 </template>
 
 <script setup>
 /* global M */
 /* eslint-disable */
 import HeaderComponent from '@/components/HeaderComponent.vue';
-import FooterComponent from '@/components/FooterComponent.vue';
 import {ref, onMounted, inject} from 'vue';
 import axios from 'axios';
 

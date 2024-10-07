@@ -9,9 +9,7 @@
     const router = useRouter();
 
     onBeforeMount (() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('usertype');
-        localStorage.removeItem('username');
+        localStorage.clear();
         M.toast({html: 'Sesión cerrada', classes: 'deep-purple lighten-2'});
         router.push('/login');
     });

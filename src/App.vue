@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="app-container">
     <router-view/>
+    <FooterComponent></FooterComponent>
   </div>
 </template>
 
@@ -9,6 +10,7 @@
 import {provide} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import FooterComponent from './components/FooterComponent.vue';
 const router = useRouter();
 
 function clearSession(){
@@ -88,3 +90,15 @@ async function verifyUser(){
 provide('verifyUser', verifyUser);
 provide('verifyAdmin', verifyAdmin);
 </script>
+
+<style scoped>
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-footer {
+    margin-top: auto;
+}
+</style>
