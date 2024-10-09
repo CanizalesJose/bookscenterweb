@@ -27,6 +27,11 @@
             <div class="section center">
                 <h3>Prestamos pendientes</h3>
             </div>
+            <!-- Si no hay prestamos pendientes -->
+            <div v-if="pendingLoansData.length == 0" class="container center">
+                <img style="width: 300px;" src="https://ih1.redbubble.net/image.5298812813.1315/st,small,507x507-pad,600x600,f8f8f8.jpg">
+                <h5>No hay prestamos pendientes</h5>
+            </div>
             <!-- Tablas de prestamos pendientes separados por id de prestamo -->
             <div v-for="loan in pendingLoansData" :key="loan.reference.id">
                 <div class="row">
@@ -53,7 +58,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="book in loan.books" :key="book.id">
+                            <tr v-for="book in loan.books" :key="book.bookId">
                                 <td>
                                     <img :src="book.cover" class="listCover">
                                 </td>
@@ -64,8 +69,8 @@
                                 <td v-if="book.returned==0">
                                     Pendiente
                                     <br><br>
-                                    <button @click="changeStatusModal(book.id, loan.reference.id)" class="btn-floating waves-effect-light green lighten-1 center">
-                                        <i class="material-icons prefix">check</i>
+                                    <button @click="changeStatusModal(loan.reference.id, book.bookId, book.cover, book.title, book.author, book.isbn)" class="btn-floating waves-effect-light green lighten-1 center hoverable">
+                                        <i class="material-icons">book</i>
                                     </button>
                                 </td>
                                 <td v-if="book.returned==1">Entregado</td>
@@ -117,7 +122,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="book in loan.books" :key="book.id">
+                            <tr v-for="book in loan.books" :key="book.bookId">
                                 <td>
                                     <img :src="book.cover" class="listCover">
                                 </td>
@@ -128,8 +133,8 @@
                                 <td v-if="book.returned==0">
                                     Pendiente
                                     <br><br>
-                                    <button @click="changeStatusModal(book.id, loan.reference.id)" class="btn-floating waves-effect-light green lighten-1 center">
-                                        <i class="material-icons prefix">check</i>
+                                    <button @click="changeStatusModal(book.bookId, loan.reference.id)" class="btn-floating waves-effect-light green lighten-1 center">
+                                        <i class="material-icons prefix">box_add</i>
                                     </button>
                                 </td>
                                 <td v-if="book.returned==1">Entregado</td>
@@ -139,6 +144,39 @@
                 </div>
                 <br><br>
             </div>
+        </div>
+    </div>
+
+    <div id="changeStatusModal" class="modal modalContainer">
+        <div class="modal-content">
+            <h4>¿Confirmar entrega?</h4>
+            <div class="divider"></div>
+            <p>Solo presiona confirmar si estas seguro de querer cambiar el estado del libro prestado, ten en cuenta que no puede deshacerse.</p>
+            <table class="highlight responsive-table">
+                <thead>
+                    <tr>
+                        <th>Portada</th>
+                        <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>ISBN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img :src="selBookCover" class="listCover">
+                        </td>
+                        <td>{{ selBookTitle }}</td>
+                        <td>{{ selBookAuthor }}</td>
+                        <td>{{ selBookIsbn }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <div class="divider"></div>
+            <a class="modal-close waves-effect waves-red btn-flat">Cancelar</a>
+            <a @click="confirmChangeStatus" class="modal-close waves-effect waves-green btn-flat">Confirmar Entrega</a>
         </div>
     </div>
 </template>
@@ -154,6 +192,12 @@ const returnedLoans = ref([]);
 const returnedLoansData = ref([]);
 const pendingLoans = ref([]);
 const pendingLoansData = ref([]);
+const selLoanId = ref(null);
+const selBookId = ref(null);
+const selBookTitle = ref(null);
+const selBookCover = ref(null);
+const selBookAuthor = ref(null);
+const selBookIsbn = ref(null);
 
 onMounted(async () => {
     if (!await verifyAdmin())
@@ -166,9 +210,12 @@ onMounted(async () => {
 async function initMaterialize() {
     const parallaxElems = document.querySelectorAll('.parallax');
     M.Parallax.init(parallaxElems);
+    const modalElems = document.querySelectorAll('.modal');
+    M.Modal.init(modalElems);
 }
 
 async function fetchReturnedLoans(){
+    returnedLoansData.value = [];
     await axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchReturned`, {
         headers: {
             token: localStorage.getItem('token')
@@ -193,6 +240,7 @@ async function fetchReturnedLoans(){
     });
 }
 async function fetchPendingLoans(){
+    pendingLoansData.value = [];
     await axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchPending`, {
         headers: {
             token: localStorage.getItem('token')
@@ -211,6 +259,31 @@ async function fetchPendingLoans(){
             });
             pendingLoansData.value.push({reference: loan ,books: newData});
         }
+    });
+}
+function changeStatusModal(loanId, bookId, cover, title, author, isbn){
+    selLoanId.value = loanId;
+    selBookId.value = bookId;
+    selBookCover.value = cover;
+    selBookTitle.value = title;
+    selBookAuthor.value = author;
+    selBookIsbn.value = isbn;
+    let changeStatusModal = M.Modal.getInstance(document.querySelector('#changeStatusModal'));
+    changeStatusModal.open();
+}
+function confirmChangeStatus(){
+    axios.patch(`${process.env.VUE_APP_API_URL}/loans/update/${selLoanId.value}/${selBookId.value}/1`, null, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(() => {
+        M.toast({html: 'Libro entregado!', classes: 'green lighten-1'});
+        fetchPendingLoans();
+        fetchReturnedLoans();
+    })
+    .catch(error => {
+        M.toast({html: `Error en la consulta: ${error.message}`, classes: 'yellow darken-4'});
     });
 }
 </script>
@@ -235,6 +308,6 @@ table th, table td {
     width: 100px;
 }
 .parallax-container {
-    height: 300px;
+    height: 200px;
 }
 </style>
