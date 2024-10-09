@@ -91,7 +91,7 @@ provide('verifyUser', verifyUser);
 provide('verifyAdmin', verifyAdmin);
 </script>
 
-<style scoped>
+<style>
 .app-container {
     display: flex;
     flex-direction: column;
