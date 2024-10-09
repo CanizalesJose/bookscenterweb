@@ -23,10 +23,58 @@
     <!-- Pendientes -->
     <div class="container">
         <div class="row">
+            <div class="divider"></div>
             <div class="section center">
                 <h3>Prestamos pendientes</h3>
             </div>
             <!-- Tablas de prestamos pendientes separados por id de prestamo -->
+            <div v-for="loan in pendingLoansData" :key="loan.reference.id">
+                <div class="row">
+                    <div class="divider"></div>
+                    <div class="col s12 m6 center">
+                        <p style="font-size: 20px;"><b>Pedido:</b> {{ loan.reference.id }}</p>
+                        <p style="font-size: 20px;"><b>Fecha de prestamo: </b>{{ loan.reference.date }}</p>
+                    </div>
+                    <div class="col s12 m6 center">
+                        <p style="font-size: 20px;"><b>Usuario:</b> {{ loan.reference.username }}</p>
+                        <p style="font-size: 20px;"><b>Fecha limite: </b>{{ loan.reference.returnDate }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="highlight responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Portada</th>
+                                <th>Titulo</th>
+                                <th>Autor</th>
+                                <th>Categoría</th>
+                                <th>ISBN</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="book in loan.books" :key="book.id">
+                                <td>
+                                    <img :src="book.cover" class="listCover">
+                                </td>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>{{ book.category }}</td>
+                                <td>{{ book.isbn }}</td>
+                                <td v-if="book.returned==0">
+                                    Pendiente
+                                    <br><br>
+                                    <button @click="changeStatusModal(book.id, loan.reference.id)" class="btn-floating waves-effect-light green lighten-1 center">
+                                        <i class="material-icons prefix">check</i>
+                                    </button>
+                                </td>
+                                <td v-if="book.returned==1">Entregado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br><br>
+            </div>
         </div>
     </div>
     <!-- Imagen -->
@@ -42,6 +90,55 @@
                 <h3>Historial de prestamos</h3>
             </div>
             <!-- Tabla de historial -->
+            <div v-for="loan in returnedLoansData" :key="loan.reference.id">
+                <div class="row">
+                    <div class="divider"></div>
+                    <div class="col s12 m6 center">
+                        <p style="font-size: 20px;"><b>Pedido:</b> {{ loan.reference.id }}</p>
+                        <br>
+                        <p style="font-size: 20px;"><b>Fecha de prestamo: </b>{{ loan.reference.date }}</p>
+                    </div>
+                    <div class="col s12 m6 center">
+                        <p style="font-size: 20px;"><b>Usuario:</b> {{ loan.reference.username }}</p>
+                        <br>
+                        <p style="font-size: 20px;"><b>Fecha limite: </b>{{ loan.reference.returnDate }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="highlight responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Portada</th>
+                                <th>Titulo</th>
+                                <th>Autor</th>
+                                <th>Categoría</th>
+                                <th>ISBN</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="book in loan.books" :key="book.id">
+                                <td>
+                                    <img :src="book.cover" class="listCover">
+                                </td>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>{{ book.category }}</td>
+                                <td>{{ book.isbn }}</td>
+                                <td v-if="book.returned==0">
+                                    Pendiente
+                                    <br><br>
+                                    <button @click="changeStatusModal(book.id, loan.reference.id)" class="btn-floating waves-effect-light green lighten-1 center">
+                                        <i class="material-icons prefix">check</i>
+                                    </button>
+                                </td>
+                                <td v-if="book.returned==1">Entregado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br><br>
+            </div>
         </div>
     </div>
 </template>
@@ -49,14 +146,21 @@
 <script setup>
 /* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
-import { inject, onMounted } from 'vue';
+import axios from 'axios';
+import { inject, onMounted, ref } from 'vue';
 
 const verifyAdmin = inject('verifyAdmin');
+const returnedLoans = ref([]);
+const returnedLoansData = ref([]);
+const pendingLoans = ref([]);
+const pendingLoansData = ref([]);
 
 onMounted(async () => {
     if (!await verifyAdmin())
         return;
     await initMaterialize();
+    await fetchReturnedLoans();
+    await fetchPendingLoans();
 });
 
 async function initMaterialize() {
@@ -64,6 +168,51 @@ async function initMaterialize() {
     M.Parallax.init(parallaxElems);
 }
 
+async function fetchReturnedLoans(){
+    await axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchReturned`, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(async res => {
+        returnedLoans.value = res.data;
+        for (const loan of returnedLoans.value) {
+            let newData = await axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchById/${loan.id}`,{
+                headers: {
+                    token: localStorage.getItem('token')
+                }
+            })
+            .then(res => {
+                return res.data;
+            });
+            returnedLoansData.value.push({reference: loan, books: newData});
+        }
+    })
+    .catch(error => {
+        M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+    });
+}
+async function fetchPendingLoans(){
+    await axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchPending`, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(async res => {
+        pendingLoans.value = res.data;
+        for (const loan of pendingLoans.value) {
+            let newData = await axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchById/${loan.id}`,{
+                headers: {
+                    token: localStorage.getItem('token')
+                }
+            })
+            .then(res => {
+                return res.data;
+            });
+            pendingLoansData.value.push({reference: loan ,books: newData});
+        }
+    });
+}
 </script>
 
 <style scoped>
@@ -86,11 +235,6 @@ table th, table td {
     width: 100px;
 }
 .parallax-container {
-    width: 100%;
     height: 300px;
-}
-.parallax {
-    width: 100%;
-    height: auto;
 }
 </style>
