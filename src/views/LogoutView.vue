@@ -1,9 +1,8 @@
 <template>
-    <HeaderComponent></HeaderComponent>
+    <h5>Logout</h5>
 </template>
 <script setup>
     /* global M */
-    import HeaderComponent from '@/components/HeaderComponent.vue';
     import { onBeforeMount } from 'vue'
     import { useRouter } from 'vue-router';
     const router = useRouter();

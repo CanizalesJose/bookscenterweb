@@ -1,5 +1,4 @@
 <template>
-    <HeaderComponent></HeaderComponent>
 
     <div class="fixed-action-btn">
         <a @click="registerModal(null, null, null, null, null)" class="btn-floating btn-large green lighten-1">
@@ -208,7 +207,6 @@
 <script setup>
 /* global M */
 /* eslint-disable */
-import HeaderComponent from '@/components/HeaderComponent.vue';
 import {ref, onMounted, inject} from 'vue';
 import axios from 'axios';
 
@@ -419,10 +417,6 @@ table th, table td {
     padding: 10px;
 }
 .parallax-container {
-width: 100%;
-}
-.parallax {
-    width: 100%;
-    height: auto;
+    height: 200px;
 }
 </style>

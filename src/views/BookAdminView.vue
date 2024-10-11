@@ -1,5 +1,4 @@
 <template>
-    <HeaderComponent></HeaderComponent>
     <div class="fixed-action-btn">
         <a @click="registerModal()" class="btn-floating btn-large green lighten-1 hoverable">
             <i class="large material-icons">add</i>
@@ -275,7 +274,6 @@
 <script setup>
 /* eslint-disable */
 /* global M */
-import HeaderComponent from '@/components/HeaderComponent.vue';
 import axios from 'axios';
 import { onMounted, inject, ref } from 'vue';
 
@@ -482,7 +480,6 @@ async function confirmUpdate(){
         publishYear: selPublishYear.value,
         category: selCategory.value,
         copies: selCopies.value,
-        loanCopies: selLoanCopies.value,
         imageUrl: selImageUrl.value
     }
     await axios.patch(`${process.env.VUE_APP_API_URL}/books/update/${selId.value}`, data, {
@@ -548,10 +545,6 @@ table th, table td {
     width: 100px;
 }
 .parallax-container {
-    width: 100%;
-}
-.parallax {
-    width: 100%;
-    height: auto;
+    height: 200px;
 }
 </style>

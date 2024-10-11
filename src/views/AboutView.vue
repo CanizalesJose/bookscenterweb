@@ -1,5 +1,4 @@
 <template>
-    <HeaderComponent></HeaderComponent>
     <h3 class="center">Acerca de...</h3>
     <div class="container halign-wrapper">
         <br>
@@ -11,5 +10,4 @@
 </template>
 
 <script setup>
-import HeaderComponent from '@/components/HeaderComponent.vue';
 </script>

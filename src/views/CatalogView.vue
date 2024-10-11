@@ -1,5 +1,4 @@
 <template>
-    <HeaderComponent></HeaderComponent>
     <div>
     <!-- Botón para abrir el modal -->
         <div class="fixed-action-btn">
@@ -37,7 +36,6 @@
 <script setup>
 /* eslint-disable */
 /* global M */
-import HeaderComponent from '@/components/HeaderComponent.vue';
 import { onMounted, inject, ref} from 'vue';
 import axios from 'axios';
 

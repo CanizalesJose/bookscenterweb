@@ -1,6 +1,5 @@
 <template>
     <div>
-        <HeaderComponent/>
         <div class="section">
             <div class="container center">
                 <br><br>
@@ -45,7 +44,6 @@
 </template>
 
 <script setup>
-import HeaderComponent from '@/components/HeaderComponent.vue';
 import { onMounted, inject } from 'vue';
 /* global M */
 const verifyUser = inject('verifyUser');

@@ -1,5 +1,4 @@
 <template>
-    <HeaderComponent></HeaderComponent>
     <!-- Titulo -->
     <div class="container">
         <div class="row">
@@ -146,6 +145,11 @@
             </div>
         </div>
     </div>
+    <!-- Si no hay registro -->
+    <div v-if="returnedLoansData.length == 0" class="container center">
+        <img style="width: 300px;" src="https://ih1.redbubble.net/image.5298812813.1315/st,small,507x507-pad,600x600,f8f8f8.jpg">
+        <h5>No hay registro por mostrar</h5>
+    </div>
 
     <div id="changeStatusModal" class="modal modalContainer">
         <div class="modal-content">
@@ -183,7 +187,6 @@
 
 <script setup>
 /* global M */
-import HeaderComponent from '@/components/HeaderComponent.vue';
 import axios from 'axios';
 import { inject, onMounted, ref } from 'vue';
 

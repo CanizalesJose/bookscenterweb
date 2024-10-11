@@ -1,5 +1,4 @@
 <template>
-    <HeaderComponent></HeaderComponent>
     <div class="fixed-action-btn">
         <a @click="registerModal('')" class="btn-floating btn-large green lighten-1">
             <i class="large material-icons">add</i>
@@ -154,7 +153,6 @@
 
 <script setup>
 /* global M */
-import HeaderComponent from '@/components/HeaderComponent.vue';
 import {ref, onMounted, inject} from 'vue';
 import axios from 'axios';
 
@@ -312,5 +310,8 @@ table th, table td {
 .modalContainer{
     padding-left: 5%;
     padding-right: 5%;
+}
+.parallax-container {
+    height: 200px;
 }
 </style>
