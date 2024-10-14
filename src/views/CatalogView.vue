@@ -1,33 +1,35 @@
 <template>
-    <div>
+    <HeaderComponent></HeaderComponent>
     <!-- Botón para abrir el modal -->
-        <div class="fixed-action-btn">
-            <a @click="openModal" class="btn-floating btn-large red">
-            <i class="large material-icons">shopping_cart_checkout</i>
-            </a>
-        </div>
+    <div class="fixed-action-btn">
+        <a @click="openModal" class="btn-floating btn-large red">
+        <i class="large material-icons">shopping_cart_checkout</i>
+        </a>
+    </div>
 
     <!-- Modal Structure -->
-        <div id="customModal" class="modal">
-            <div class="modal-content">
-                <h4>Confirmar pedido</h4>
-                <p>Los libros prestados se deben devolver en una semana como máximo.</p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
-            </div>
+    <div id="customModal" class="modal">
+        <div class="modal-content">
+            <h4>Confirmar pedido</h4>
+            <p>Los libros prestados se deben devolver en una semana como máximo.</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
         </div>
     </div>
 
-    <div class="valign-wrapper">
+    <div class="container">
         <div class="row">
             <div class="col s12 center">
                 <h3>Catalogo</h3>
             </div>
-            
-            <div v-for="book in bookList" :key="book.id">
-                <!-- Aqui se genera el catalogo -->
-                 <!-- {{ book.title }} -->
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m12">
+                <div class="section center">
+                    <!-- Aqui se construyen las cards con los libros -->
+                </div>
             </div>
         </div>
     </div>
@@ -38,6 +40,7 @@
 /* global M */
 import { onMounted, inject, ref} from 'vue';
 import axios from 'axios';
+import HeaderComponent from '@/components/HeaderComponent.vue';
 
 const verifyUser = inject('verifyUser');
 const bookList = ref([]);
@@ -76,5 +79,25 @@ function openModal() {
 </script>
 
 <style scoped>
-
+.row{
+    padding-top: 5vh;
+}
+.responsive-table{
+    overflow-x: auto;
+}
+table th, table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
+.modalContainer{
+    padding-left: 5%;
+    padding-right: 5%;
+}
+.listCover {
+    width: 100px;
+}
+.parallax-container {
+    height: 200px;
+}
 </style>

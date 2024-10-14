@@ -1,4 +1,5 @@
 <template>
+    <HeaderComponent></HeaderComponent>
     <div class="fixed-action-btn">
         <a @click="registerModal('', '')" class="btn-floating btn-large green lighten-1">
             <i class="large material-icons">add</i>
@@ -169,6 +170,7 @@
 /* global M */
 import { ref, onMounted, inject} from 'vue';
 import axios from 'axios';
+import HeaderComponent from '@/components/HeaderComponent.vue';
 
 onMounted( async () => {
     if (!await verifyAdmin())

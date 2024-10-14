@@ -1,5 +1,5 @@
 <template>
-<div>
+    <HeaderComponent></HeaderComponent>
     <!-- Crear un contenedor alineado al centro -->
     <div class="valign-wrapper loginContainer">
         <div class="container center-align light-blue darken-2 z-depth-4">
@@ -52,12 +52,12 @@
             </div>
         </div>
     </div>
-</div>
 </template>
 
 <script setup>
     /* global M */
-    import axios from 'axios';
+    import HeaderComponent from '@/components/HeaderComponent.vue';
+import axios from 'axios';
     import { ref, onBeforeMount } from 'vue'
     import { useRouter } from 'vue-router';
     const router = useRouter();

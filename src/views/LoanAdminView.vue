@@ -1,4 +1,5 @@
 <template>
+    <HeaderComponent></HeaderComponent>
     <!-- Titulo -->
     <div class="container">
         <div class="row">
@@ -28,7 +29,7 @@
             </div>
             <!-- Si no hay prestamos pendientes -->
             <div v-if="pendingLoansData.length == 0" class="container center">
-                <img style="width: 300px;" src="https://ih1.redbubble.net/image.5298812813.1315/st,small,507x507-pad,600x600,f8f8f8.jpg">
+                <img style="width: 300px;" src="../assets/img/todo-bien.png">
                 <h5>No hay prestamos pendientes</h5>
             </div>
             <!-- Tablas de prestamos pendientes separados por id de prestamo -->
@@ -147,7 +148,7 @@
     </div>
     <!-- Si no hay registro -->
     <div v-if="returnedLoansData.length == 0" class="container center">
-        <img style="width: 300px;" src="https://ih1.redbubble.net/image.5298812813.1315/st,small,507x507-pad,600x600,f8f8f8.jpg">
+        <img style="width: 300px;" src="../assets/img/todo-bien.png">
         <h5>No hay registro por mostrar</h5>
     </div>
 
@@ -187,6 +188,7 @@
 
 <script setup>
 /* global M */
+import HeaderComponent from '@/components/HeaderComponent.vue';
 import axios from 'axios';
 import { inject, onMounted, ref } from 'vue';
 

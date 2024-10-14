@@ -1,4 +1,5 @@
 <template>
+    <HeaderComponent></HeaderComponent>
     <div class="fixed-action-btn">
         <a @click="registerModal()" class="btn-floating btn-large green lighten-1 hoverable">
             <i class="large material-icons">add</i>
@@ -274,6 +275,7 @@
 <script setup>
 /* eslint-disable */
 /* global M */
+import HeaderComponent from '@/components/HeaderComponent.vue';
 import axios from 'axios';
 import { onMounted, inject, ref } from 'vue';
 

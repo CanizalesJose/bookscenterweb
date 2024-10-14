@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <HeaderComponent></HeaderComponent>
     <router-view/>
     <FooterComponent></FooterComponent>
   </div>
@@ -12,7 +11,6 @@ import {provide} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import FooterComponent from './components/FooterComponent.vue';
-import HeaderComponent from './components/HeaderComponent.vue';
 const router = useRouter();
 
 function clearSession(){

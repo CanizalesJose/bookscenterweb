@@ -9,7 +9,7 @@
 
     onBeforeMount (() => {
         localStorage.clear();
-        M.toast({html: 'Sesión cerrada', classes: 'deep-purple lighten-2'});
+        M.toast({html: 'Sesión cerrada', classes: 'red lighten-1'});
         router.push('/login');
     });
 </script>

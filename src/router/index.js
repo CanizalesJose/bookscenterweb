@@ -8,6 +8,7 @@ import AuthorAdminView from '../views/AuthorAdminView.vue';
 import CategoryAdminView from '@/views/CategoryAdminView.vue';
 import BookAdminView from '@/views/BookAdminView.vue';
 import LoanAdminView from '@/views/LoanAdminView.vue';
+import CatalogAdminView from '@/views/CatalogAdminView.vue';
 import AboutView from '@/views/AboutView.vue';
 import NotFound from '@/views/NotFound.vue';
 
@@ -55,6 +56,11 @@ const routes = [
     path: '/adminLoans',
     name: 'LoanAdminView',
     component: LoanAdminView
+  },
+  {
+    path: '/adminCatalog',
+    name: 'CatalogAdminView',
+    component: CatalogAdminView
   },
   {
     path: '/about',

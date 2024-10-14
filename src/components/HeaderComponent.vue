@@ -5,6 +5,7 @@
         <li><a href="/adminBooks">Libros</a></li>
         <li><a href="/adminLoans">Prestamos</a></li>
         <li><a href="/adminUsers">Usuarios</a></li>
+        <li><a href="/adminCatalog">Catálogo</a></li>
     </ul>
     <ul id="adminMenu2" class="dropdown-content">
         <li><a href="/adminCategories">Categorias</a></li>
@@ -12,6 +13,7 @@
         <li><a href="/adminBooks">Libros</a></li>
         <li><a href="/adminLoans">Prestamos</a></li>
         <li><a href="/adminUsers">Usuarios</a></li>
+        <li><a href="/adminCatalog">Catálogo</a></li>
     </ul>    
     <div class="navbar-fixed">
         <nav class="custom-nav">
@@ -25,7 +27,7 @@
                 <ul class="left hide-on-med-and-down">
                     <!-- Lista con los apartados de la página -->
                     <li class="hoverable"><a href="/">Inicio</a></li>
-                    <li class="hoverable"><a href="/catalog">Catalogo</a></li>
+                    <li class="hoverable"><a href="/catalog">Catálogo</a></li>
                     <li class="hoverable"><a href="/about">Acerca de...</a></li>
                     <li v-if="usertype=='admin'" class="hoverable">
                         <a class="dropdown-trigger" data-target="adminMenu1">
@@ -45,7 +47,7 @@
 
     <ul class="sidenav" id="mobile-demo">
         <li><a href="/">Inicio</a></li>
-        <li><a href="/catalog">Catalogo</a></li>
+        <li><a href="/catalog">Catálogo</a></li>
         <li><a href="/about">Acerca de...</a></li>
         <li v-if="usertype=='admin'" class="hoverable">
             <a class="dropdown-trigger" data-target="adminMenu2">

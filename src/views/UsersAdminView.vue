@@ -1,5 +1,5 @@
 <template>
-
+    <HeaderComponent></HeaderComponent>
     <div class="fixed-action-btn">
         <a @click="registerModal(null, null, null, null, null)" class="btn-floating btn-large green lighten-1">
             <i class="large material-icons">add</i>
@@ -209,6 +209,7 @@
 /* eslint-disable */
 import {ref, onMounted, inject} from 'vue';
 import axios from 'axios';
+import HeaderComponent from '@/components/HeaderComponent.vue';
 
 const verifyAdmin = inject('verifyAdmin');
 const usersList = ref([]);
