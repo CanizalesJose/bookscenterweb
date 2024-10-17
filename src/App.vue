@@ -60,7 +60,7 @@ async function verifyUser(){
     let pass = false;
     if (!localStorage.getItem('token'))
         return false;
-    await axios.get(`${process.env.VUE_APP_API_URL}/users/validToken`, {
+    axios.get(`${process.env.VUE_APP_API_URL}/users/validToken`, {
         headers: {
             token: localStorage.getItem('token')
         }

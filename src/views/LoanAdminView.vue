@@ -241,7 +241,7 @@ async function fetchReturnedLoans(){
         }
     })
     .catch(error => {
-        M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
     });
 }
 async function fetchPendingLoans(){
@@ -264,6 +264,9 @@ async function fetchPendingLoans(){
             });
             pendingLoansData.value.push({reference: loan ,books: newData});
         }
+    })
+    .catch(error => {
+        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
     });
 }
 function changeStatusModal(loanId, bookId, cover, title, author, isbn){
@@ -288,7 +291,7 @@ function confirmChangeStatus(){
         fetchReturnedLoans();
     })
     .catch(error => {
-        M.toast({html: `Error en la consulta: ${error.message}`, classes: 'yellow darken-4'});
+        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
     });
 }
 </script>

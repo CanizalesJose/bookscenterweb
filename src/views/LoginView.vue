@@ -2,7 +2,7 @@
     <HeaderComponent></HeaderComponent>
     <!-- Crear un contenedor alineado al centro -->
     <div class="valign-wrapper loginContainer">
-        <div class="container center-align light-blue darken-2 z-depth-4">
+        <div class="container center-align black z-depth-4">
 
             <!-- Generar un renglon centrado -->
             <div class="row center">
@@ -18,26 +18,26 @@
                     <div class="row">
                         <h4 class="white-text">Iniciar sesión</h4>
                         <br>
-                        <div class="input-field col s12">
+                        <div class="input-field col s12 white-text">
                             <i class="material-icons prefix">account_circle</i>
-                            <input v-model="username" id="username" name="username" type="text" data-length="30" required autocomplete="off">
+                            <input class="white-text" v-model="username" id="username" name="username" type="text" data-length="30" required autocomplete="off">
                             <label for="username">Username</label>
                         </div>
                     </div>
                     
                     <div class="row">
-                        <div class="input-field col s12">
+                        <div class="input-field col s12 white-text">
                             <i class="material-icons prefix">lock</i>
-                            <input v-model="password" id="password" name="password" type="password" data-length="16" required autocomplete="off">
+                            <input class="white-text" v-model="password" id="password" name="password" type="password" data-length="16" required autocomplete="off">
                             <label for="password">Password</label>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="input-field col s12">
-                            <button class="btn waves-effect waves-light" @click="valInput">
+                            <button class="btn waves-effect waves-light white black-text" @click="valInput">
                                 Iniciar Sesión
-                                <i class="material-icons right">send</i>
+                                <i class="material-icons right black-text">send</i>
                             </button>
                         </div>
                     </div>
@@ -110,6 +110,8 @@ import axios from 'axios';
         align-items: center;
         height: calc(100vh - 70px);
         width: 100%;
+        margin-top: 2vh;
+        margin-bottom: 1vh;
         padding: 0;
     }
     .loginContainer .container {

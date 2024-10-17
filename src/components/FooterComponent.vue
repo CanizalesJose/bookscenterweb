@@ -1,5 +1,5 @@
 <template>
-    <footer class="page-footer blue darken-2">
+    <footer class="page-footer grey darken-4">
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="footer-copyright light-blue darken-4">
+        <div class="footer-copyright black">
             <div class="container center">
                 Canizales López José Manuel - 20490690
             </div>

@@ -1,13 +1,79 @@
 <template>
     <HeaderComponent></HeaderComponent>
     <!-- Modal Structure -->
-    <div id="customModal" class="modal">
+    <div id="addModal" class="modal">
         <div class="modal-content">
             <h4>¿Agregar al catálogo?</h4>
             <p>Al agregar un libro al catálogo los clientes podrán verlo en la tienda y pedirlo prestado. Siempre puedes volver no visible un elemento del catálogo.</p>
+            <div class="center" style="width: 60%; margin-inline: auto;">
+                <div class="input-field">
+                    <textarea class="materialize-textarea" v-model="selBook.summary"/>
+                    <label>Sinopsis</label>
+                </div>
+                <div class="input-field">
+                    <select>
+                        <option value="1">Público</option>
+                        <option value="0">Oculto</option>
+                    </select>
+                    <label>Visibilidad inicial</label>
+                </div>
+            </div>
+            <table class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>Portada</th>
+                        <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>Categoría</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img :src="selBook.cover" class="listCover"></td>
+                        <td>{{ selBook.title }}</td>
+                        <td>{{ selBook.author }}</td>
+                        <td>{{ selBook.category }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="modal-footer">
-            <a href="#" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+            <a class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
+            <a @click="confirmAddToCatalog" class="modal-close waves-effect vaves-green btn-flat">Agregar</a>
+        </div>
+    </div>
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h4>Modificar la Sinopsis</h4>
+            <p>
+                La sinopsis es un resumen general de la obra en cuestión. Por lo general este dato se encuentra en la contraportada de cada libro, sin embargo se puede agregar uno personalizado.
+                <br>
+                Se debe tener en cuenta que este resumen no debe contener información vital sobre la trama del libro, para evitar descontentos con el cliente.
+            </p>
+            <div style="margin-inline: auto; width: 60%;" class="input-field center">
+                <label>Sinopsis</label>
+                <br>
+                <textarea ref="textAreaRef" class="materialize-textarea" v-model="selBook.summary"/>
+            </div>
+            <table class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>Portada</th>
+                        <th>Titulo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img :src="selBook.cover" class="listCover"></td>
+                        <td>{{ selBook.title }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
+            <a @click="confirmEdit" class="modal-close waves-effect waves-green btn-flat">Confirmar</a>
         </div>
     </div>
     <!-- Delete Modal -->
@@ -36,8 +102,8 @@
             </table>
         </div>
         <div class="modal-footer">
-            <a href="#" class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
-            <a @click="confirmDelete()" href="#" class="modal-close waves-effect waves-green btn-flat">Confirmar</a>
+            <a class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
+            <a @click="confirmDelete()" class="modal-close waves-effect waves-green btn-flat">Confirmar</a>
         </div>
     </div>
     <!-- Visibility Modal -->
@@ -50,6 +116,7 @@
             <p v-if="selVisible">
                 Estas ocultando un libro del catálogo. Si confirmas, se eliminará de la página de catálogo y los usuarios ya no podrán solicitar prestamos.
             </p>
+            <label>Sinopsis</label>
             <table class="responsive-table">
                 <thead>
                     <tr>
@@ -70,10 +137,10 @@
             </table>
         </div>
         <div class="modal-footer">
-            <a href="#" class="modal-close waves-effect waves-red btn-flat">
+            <a class="modal-close waves-effect waves-red btn-flat">
                 Cancelar
             </a>
-            <a @click="confirmChangeVisibility()" href="#" class="modal-close waves-effect waves-green btn-flat">
+            <a @click="confirmChangeVisibility()" class="modal-close waves-effect waves-green btn-flat">
                 Confirmar
             </a>
         </div>
@@ -117,20 +184,24 @@
                                     <p><b>Restantes</b> {{ book.copies-book.loanCopies }}</p>
                                 </td>
                                 <td v-if="!book.isVisible">
-                                    <p><b>Volver visible:</b></p>
-                                    <button @click="changeVisibilityModal(book.catalogId, book.bookId, book.isVisible, book.title, book.fullName, book.descr, book.imageUrl)" class="btn-floating waves-effect-light black center">
+                                    <p><b>Mostrar:</b></p>
+                                    <button @click="changeVisibilityModal(book.catalogId, book.bookId, book.isVisible, book.title, book.fullName, book.descr, book.imageUrl, book.summary)" class="btn-floating waves-effect-light black center">
                                         <i class="material-icons">visibility</i>
                                     </button>
                                 </td>
                                 <td v-if="book.isVisible">
                                     <p><b>Ocultar:</b></p>
-                                    <button @click="changeVisibilityModal(book.catalogId, book.bookId, book.isVisible, book.title, book.fullName, book.descr, book.imageUrl)" class="btn-floating waves-effect-light black center">
+                                    <button @click="changeVisibilityModal(book.catalogId, book.bookId, book.isVisible, book.title, book.fullName, book.descr, book.imageUrl, book.summary)" class="btn-floating waves-effect-light black center">
                                         <i class="material-icons">visibility_off</i>
                                     </button>
                                 </td>
                                 <td>
+                                    <p><b>Modificar:</b></p>
+                                    <button @click="editModal(book.catalogId, book.bookId, book.title, book.imageUrl, book.summary)" class="btn-floating waves-effect-light black center">
+                                        <i class="material-icons">edit</i>
+                                    </button>
                                     <p><b>Eliminar:</b></p>
-                                    <button @click="deleteModal(book.catalogId, book.bookId, book.title, book.fullName, book.descr, book.imageUrl)" class="btn-floating waves-effect-light red center">
+                                    <button @click="deleteModal(book.catalogId, book.bookId, book.title, book.fullName, book.descr, book.imageUrl)" class="btn-floating waves-effect-light black center">
                                         <i class="material-icons">delete</i>
                                     </button>
                                 </td>
@@ -158,6 +229,7 @@
                                 <th>Autor</th>
                                 <th>Categoria</th>
                                 <th>Existencias</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -170,6 +242,12 @@
                                     <p><b>Registrado:</b> {{ book.copies }}</p>
                                     <p><b>Prestados:</b> {{ book.loanCopies }}</p>
                                     <p><b>Restantes</b> {{ book.copies-book.loanCopies }}</p>
+                                </td>
+                                <td>
+                                    <p>Agregar al catálogo:</p>
+                                    <button @click="addToCatalogModal(book.bookId, book.imageUrl , book.title, book.fullName, book.descr)" class="btn-floating waves-effect-light green center">
+                                        <i class="material-icons">add</i>
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -187,23 +265,27 @@ import { onMounted, inject, ref} from 'vue';
 import axios from 'axios';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 
-const verifyUser = inject('verifyUser');
+const verifyAdmin = inject('verifyAdmin');
 const booksNotInCatalogList = ref([]);
 const booksInCatalog = ref([]);
 const selCatalogId = ref(null);
 const selBookId = ref(null);
 const selVisible = ref(null);
-const selBook = ref({title:null, author:null, category:null, cover:null});
+const selBook = ref({title:null, author:null, category:null, cover:null, summary:null});
+const textAreaRef = ref(null);
 
 onMounted(async () => {
-    await verifyUser();
-    await initMaterialize();
+    if (!await verifyAdmin())
+        return;
+    initMaterialize();
     fetchNotInCatalog();
     fetchCatalog();
 });
 function initMaterialize(){
     const modal = document.querySelectorAll('.modal');
     M.Modal.init(modal);
+    const selectElems = document.querySelectorAll('select');
+    M.FormSelect.init(selectElems);
 }
 async function fetchNotInCatalog(){
     await axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchNotInCatalog`, {
@@ -214,12 +296,9 @@ async function fetchNotInCatalog(){
     .then(async res => {
         booksNotInCatalogList.value = res.data;
     })
-    .catch(() => {
-        if (error.response.data){
-            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
-        } else{
-            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
-        }
+    .catch( () => {
+        // Ya se gestionó el aviso desde verifyAdmin
+        // Este apartado sirve para evitar mensaje predeterminado
     });
 }
 async function fetchCatalog(){
@@ -240,11 +319,7 @@ async function fetchCatalog(){
         }
     });
 }
-function openModal() {
-    let modalInstance = M.Modal.getInstance(document.querySelector('#customModal'));
-    modalInstance.open();
-}
-function changeVisibilityModal(catalogId, bookId, visible, title, fullName, descr, imageUrl){
+function changeVisibilityModal(catalogId, bookId, visible, title, fullName, descr, imageUrl, summary){
     selCatalogId.value = catalogId;
     selBookId.value = bookId;
     selVisible.value = visible;
@@ -252,6 +327,7 @@ function changeVisibilityModal(catalogId, bookId, visible, title, fullName, desc
     selBook.value.author = fullName;
     selBook.value.category = descr;
     selBook.value.cover = imageUrl;
+    selBook.value.summary = summary;
     let modalInstance = M.Modal.getInstance(document.querySelector('#changeVisibilityModal'));
     modalInstance.open();
 }
@@ -267,7 +343,7 @@ async function confirmChangeVisibility(){
             M.toast({html: 'Libro ocultado del catálogo', classes: 'green darken-1'});
         })
         .catch(error => {
-            M.toast({html: `Error en la consulta: ${error.message}`});
+            M.toast({html: `Error en la solicitud: ${error.message}`});
         });
     }else {
         // si el registro no es visible, entonces lo hace visible
@@ -280,10 +356,38 @@ async function confirmChangeVisibility(){
             M.toast({html: 'Libro publicado en catálogo!', classes: 'green darken-1'});
         })
         .catch(error => {
-            M.toast({html: `Error en la consulta: ${error.message}`});
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
         });
     }
     fetchCatalog();
+}
+function editModal(catalogId ,bookId, title, imageUrl, summary){
+    selCatalogId.value = catalogId;
+    selBookId.value = bookId;
+    selBook.value.title = title;
+    selBook.value.cover = imageUrl;
+    textAreaRef.value.value = summary;
+    selBook.value.summary = summary;
+    let modalInstance = M.Modal.getInstance(document.querySelector('#editModal'));
+    modalInstance.open();
+    M.textareaAutoResize(textAreaRef.value);
+}
+function confirmEdit(){
+    // Confirmar el cambio de sinopsis
+    const data = {summary: selBook.value.summary};
+    axios.patch(`${process.env.VUE_APP_API_URL}/catalog/editSummary/${selCatalogId.value}/${selBookId.value}`, data, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(() => {
+        M.toast({html: `Sinopsis actualizada!`, classes: 'green lighten-1'});
+        fetchCatalog();
+    })
+    .catch(error => {
+        M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+    });
+    
 }
 function deleteModal(catalogId, bookId, title, fullName, descr, imageUrl){
     selCatalogId.value = catalogId;
@@ -305,12 +409,39 @@ async function confirmDelete(){
         M.toast({html: `${res.data.message}`, classes: 'red darken-1'});
     })
     .catch(error => {
-        M.toast({html: `Error en la consulta: ${error.message}`});
+        M.toast({html: `Error en la solicitud: ${error.message}`});
     });
     fetchCatalog();
     fetchNotInCatalog();
 }
 
+async function addToCatalogModal(bookId, cover, title, author, category){
+    selBookId.value = bookId;
+    selBook.value.cover = cover;
+    selBook.value.title = title;
+    selBook.value.author = author;
+    selBook.value.category = category;
+    selBook.value.summary = null;
+    selVisible.value = 1;
+    let modalInstance = M.Modal.getInstance(document.querySelector('#addModal'));
+    modalInstance.open();
+}
+async function confirmAddToCatalog(){
+    let data = {summary: selBook.value.summary, isVisible: selVisible.value};
+    axios.post(`${process.env.VUE_APP_API_URL}/catalog/add/${selBookId.value}`, data, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(() => {
+        M.toast({html: 'Libro publicado en catálogo!', classes: 'green lighten-1'});
+        fetchCatalog();
+        fetchNotInCatalog();
+    })
+    .catch(error => {
+        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'green lighten-1'});
+    });
+}
 </script>
 
 <style scoped>

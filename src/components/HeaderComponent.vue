@@ -1,23 +1,23 @@
 <template>
     <ul id="adminMenu1" class="dropdown-content">
-        <li><a href="/adminCategories">Categorias</a></li>
-        <li><a href="/adminAuthors">Autores</a></li>
-        <li><a href="/adminBooks">Libros</a></li>
-        <li><a href="/adminLoans">Prestamos</a></li>
-        <li><a href="/adminUsers">Usuarios</a></li>
-        <li><a href="/adminCatalog">Catálogo</a></li>
+        <li><a class="black-text" href="/adminCategories">Categorias</a></li>
+        <li><a class="black-text" href="/adminAuthors">Autores</a></li>
+        <li><a class="black-text" href="/adminBooks">Libros</a></li>
+        <li><a class="black-text" href="/adminLoans">Prestamos</a></li>
+        <li><a class="black-text" href="/adminUsers">Usuarios</a></li>
+        <li><a class="black-text" href="/adminCatalog">Catálogo</a></li>
     </ul>
     <ul id="adminMenu2" class="dropdown-content">
-        <li><a href="/adminCategories">Categorias</a></li>
-        <li><a href="/adminAuthors">Autores</a></li>
-        <li><a href="/adminBooks">Libros</a></li>
-        <li><a href="/adminLoans">Prestamos</a></li>
-        <li><a href="/adminUsers">Usuarios</a></li>
-        <li><a href="/adminCatalog">Catálogo</a></li>
+        <li><a class="black-text" href="/adminCategories">Categorias</a></li>
+        <li><a class="black-text" href="/adminAuthors">Autores</a></li>
+        <li><a class="black-text" href="/adminBooks">Libros</a></li>
+        <li><a class="black-text" href="/adminLoans">Prestamos</a></li>
+        <li><a class="black-text" href="/adminUsers">Usuarios</a></li>
+        <li><a class="black-text" href="/adminCatalog">Catálogo</a></li>
     </ul>    
     <div class="navbar-fixed">
         <nav class="custom-nav">
-            <div class="nav-wrapper light-blue accent-4">
+            <div class="nav-wrapper black">
                 <a href="/" class="brand-logo center">
                     <img src="../assets/logo.png">
                 </a>

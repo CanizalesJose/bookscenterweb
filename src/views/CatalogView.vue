@@ -8,13 +8,13 @@
     </div>
 
     <!-- Modal Structure -->
-    <div id="customModal" class="modal">
+    <div id="loanModal" class="modal">
         <div class="modal-content">
             <h4>Confirmar pedido</h4>
             <p>Los libros prestados se deben devolver en una semana como máximo.</p>
         </div>
         <div class="modal-footer">
-            <a href="#" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+            <a class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
         </div>
     </div>
 
@@ -29,6 +29,7 @@
             <div class="col s12 m12">
                 <div class="section center">
                     <!-- Aqui se construyen las cards con los libros -->
+                    <BookCardComponent title="Esto es el titulo" summary="Esto es una sinopsis, que puede ser tan larga como varios renglones, por tanto tengo que llenar espacio con palabras vacías. Cosa que, en lo personal, no se me suele dar bien, pues yo tengo mala mente para cosas de relleno, así como para cosas de diseño. No sé, es algo muy personal que no quiero compartir ahora mismo." cover="https://marketplace.canva.com/EAF8xkW8oI4/1/0/1131w/canva-documento-a4-portada-trabajo-profesional-sencilla-azul-At3IgVTuVcU.jpg"></BookCardComponent>
                 </div>
             </div>
         </div>
@@ -41,6 +42,7 @@
 import { onMounted, inject, ref} from 'vue';
 import axios from 'axios';
 import HeaderComponent from '@/components/HeaderComponent.vue';
+import BookCardComponent from '@/components/BookCardComponent.vue';
 
 const verifyUser = inject('verifyUser');
 const bookList = ref([]);
@@ -51,7 +53,7 @@ onMounted(async () => {
     await fetchBooks();
 });
 function initMaterialize(){
-    const modal = document.querySelector('#customModal');
+    const modal = document.querySelectorAll('.modal');
     M.Modal.init(modal);
 }
 async function fetchBooks(){
@@ -72,7 +74,7 @@ async function fetchBooks(){
     });
 }
 function openModal() {
-    const modalInstance = M.Modal.getInstance(document.querySelector('#customModal'));
+    const modalInstance = M.Modal.getInstance(document.querySelector('#loanModal'));
     modalInstance.open();
 }
 
