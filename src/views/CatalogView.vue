@@ -29,13 +29,19 @@
             <div class="col s12 m12">
                 <div class="section center">
                     <!-- Aqui se construyen las cards con los libros -->
-                    <BookCardComponent 
-                    title="Esto es el titulo" 
-                    summary="Esto es una sinopsis, que puede ser tan larga como varios renglones, por tanto tengo que llenar espacio con palabras vacías. Cosa que, en lo personal, no se me suele dar bien, pues yo tengo mala mente para cosas de relleno, así como para cosas de diseño. No sé, es algo muy personal que no quiero compartir ahora mismo." 
-                    cover="https://marketplace.canva.com/EAF8xkW8oI4/1/0/1131w/canva-documento-a4-portada-trabajo-profesional-sencilla-azul-At3IgVTuVcU.jpg"
-                    category="Categoría 1"
-                    author="Autor 1"
-                    />
+                    <div v-for="book in bookList" :key="book.catalogId+'-'+book.bookId">
+                        <BookCardComponent
+                        @book-added="addBookToList"
+                        :book-id="book.bookId"
+                        :catalog-id="book.catalogId"
+                        :cover="book.imageUrl"
+                        :title="book.title"
+                        :category="book.descr"
+                        :author="book.fullName"
+                        :summary="book.summary"
+                        :is-verified="isVerified"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,18 +58,20 @@ import BookCardComponent from '@/components/BookCardComponent.vue';
 
 const verifyUser = inject('verifyUser');
 const bookList = ref([]);
+const isVerified = ref(false);
 
 onMounted(async () => {
-    await verifyUser();
+    isVerified.value = await verifyUser();
     await initMaterialize();
     await fetchBooks();
+    console.log(bookList.value);
 });
 function initMaterialize(){
     const modal = document.querySelectorAll('.modal');
     M.Modal.init(modal);
 }
 async function fetchBooks(){
-    await axios.get(`${process.env.VUE_APP_API_URL}/books/findAll`, {
+    await axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchCatalog`, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -71,17 +79,20 @@ async function fetchBooks(){
     .then(async res => {
         bookList.value = res.data;
     })
-    .catch(() => {
+    .catch(error => {
         if (error.response.data){
-            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
         } else{
-            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
         }
     });
 }
 function openModal() {
     const modalInstance = M.Modal.getInstance(document.querySelector('#loanModal'));
     modalInstance.open();
+}
+function addBookToList(res){
+    M.toast({html: `${JSON.stringify(res)}`});
 }
 
 </script>

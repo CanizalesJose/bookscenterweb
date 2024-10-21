@@ -1,25 +1,30 @@
 <template>
     <div class="col s3">
-        <div class="card hoverable">
+        <div @click="addBookModal()" class="card hoverable">
             <div class="card-image">
                 <img :src="cover">
-                <span class="card-title black-text">{{ title }}</span>
+                <span class="card-title white black-text">{{ title }}</span>
             </div>
-            <div class="card-content">
+            <div class="card-content left-align">
+                <p><b>Escrito por: </b>{{ author }}</p>
+                <p><b>Categoría: </b>{{ category }}</p>
                 <p class="truncate-multiline">
-                    {{ summary }}
+                    <b>Sinopsis: </b>{{ summary }}
                 </p>
             </div>
         </div>
     </div>
 
     <!-- Modal Structure -->
-    <div id="addBookModal" class="modal">
+    <div :id="`addBookModal${catalogId}${bookId}`" class="modal">
         <div class="modal-content">
-            <h4>¿Agregar libro al pedido?</h4>
-            <p>
+            <h4 v-if="isVerified">¿Agregar libro al pedido?</h4>
+            <h4 v-if="!isVerified">Detalles del libro</h4>
+            <p v-if="isVerified">
                 Al pedir prestado un libro se tiene una semana para devolverlo. En caso contrario se le penalizará con una multa.
-                <br><br>
+            </p>
+            <p>
+                <br>
                 <b>Sinopsis:</b>
                 <br>
                 {{ summary }}
@@ -44,15 +49,42 @@
             </table>
         </div>
         <div class="modal-footer">
-            <a class="modal-close waves-effect waves-red btn-flat">Cancelar</a>
-            <a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+            <a class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
+            <a v-if="isVerified" @click="confirmAddBook" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
         </div>
     </div>
 </template>
 
 <script setup>
+/* global M */
+import {ref, defineEmits, onMounted} from 'vue';
+
+onMounted(() => {
+    const modal = document.querySelectorAll('.modal');
+    M.Modal.init(modal);
+});
+
+const emit = defineEmits(['book-added']);
+
+const selBook = ref({catalogId:null, bookId:null, cover:null, title:null, author:null, category:null, summary:null});
+
+function addBookModal(){
+    const modalInstance = M.Modal.getInstance(document.querySelector(`#addBookModal${props.catalogId}${props.bookId}`));
+    modalInstance.open();
+}
+function confirmAddBook(){
+    selBook.value.bookId = props.bookId;
+    selBook.value.catalogId = props.catalogId;
+    selBook.value.cover = props.cover;
+    selBook.value.title = props.title;
+    selBook.value.category = props.category;
+    selBook.value.author = props.author;
+    selBook.value.summary = props.summary;
+    emit('book-added', selBook.value);
+}
+
 // eslint-disable-next-line
-const props = defineProps(['bookId', 'catalogId', 'cover', 'title', 'category', 'author', 'summary']);
+const props = defineProps(['bookId', 'catalogId', 'cover', 'title', 'category', 'author', 'summary', 'isVerified']);
 
 </script>
 
@@ -74,10 +106,14 @@ table th, table td {
 }
 .card-image{
     width: 100%;
-    min-width: 200px;
+    height: 300px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .card-content {
-    height: 100px;
+    height: 150px;
 }
 .card{
     min-height: 400px;

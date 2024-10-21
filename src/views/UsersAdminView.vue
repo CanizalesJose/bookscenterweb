@@ -17,8 +17,8 @@
             <input type="password" v-model="selPassword" id="newPassword" autocomplete="off">
             <select v-model="selUsertype">
                 <option value="" disabled selected>Seleccionar tipo de usuario:</option>
-                <option value="admin" > <p class="black-text">Administrador</p></option>
-                <option value="client"><p class="black-text">Cliente</p></option>
+                <option value="admin" >Administrador</option>
+                <option value="client">Cliente</option>
             </select>
             <br>
             <label>Número de contacto:</label>
@@ -71,8 +71,8 @@
             <input class="tooltipped" type="password" data-position="left" data-tooltip="Dejar vacío para no cambiar" v-model="selPassword" autocomplete="off">
             <label>Nuevo tipo de usuario:</label>
             <select v-model="selUsertype">
-                <option value="admin"><p class="black-text">Administrador</p></option>
-                <option value="client"><p class="black-text">Cliente</p></option>
+                <option value="admin">Administrador</option>
+                <option value="client">Cliente</option>
             </select>
             
 

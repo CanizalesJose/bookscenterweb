@@ -60,7 +60,7 @@ async function verifyUser(){
     let pass = false;
     if (!localStorage.getItem('token'))
         return false;
-    axios.get(`${process.env.VUE_APP_API_URL}/users/validToken`, {
+    return axios.get(`${process.env.VUE_APP_API_URL}/users/validToken`, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -69,6 +69,7 @@ async function verifyUser(){
         localStorage.setItem('username', res.data.user.username);
         localStorage.setItem('usertype', res.data.user.usertype);
         pass = true;
+        return pass;
     })
     .catch(error => {
         if (error.code=='ERR_NETWORK'){
@@ -83,8 +84,8 @@ async function verifyUser(){
             router.push('/login');
             pass = false;
         }
+        return pass;
     });
-    return pass;
 }
 
 provide('verifyUser', verifyUser);

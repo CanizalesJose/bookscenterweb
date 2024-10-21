@@ -61,12 +61,16 @@
                     <tr>
                         <th>Portada</th>
                         <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>Categoría</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><img :src="selBook.cover" class="listCover"></td>
                         <td>{{ selBook.title }}</td>
+                        <td>{{ selBook.author }}</td>
+                        <td>{{ selBook.category }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -116,7 +120,12 @@
             <p v-if="selVisible">
                 Estas ocultando un libro del catálogo. Si confirmas, se eliminará de la página de catálogo y los usuarios ya no podrán solicitar prestamos.
             </p>
-            <label>Sinopsis</label>
+            <br>
+            <div class="container">
+                <b>Sinopsis:</b>
+                <br>
+                {{ selBook.summary }}
+            </div>
             <table class="responsive-table">
                 <thead>
                     <tr>
