@@ -1,7 +1,7 @@
 <template>
     <HeaderComponent></HeaderComponent>
     <!-- Botón para abrir el modal -->
-    <div class="fixed-action-btn">
+    <div v-if="isVerified" class="fixed-action-btn">
         <a @click="openModal" class="btn-floating btn-large red">
         <i class="large material-icons">shopping_cart_checkout</i>
         </a>
@@ -12,9 +12,35 @@
         <div class="modal-content">
             <h4>Confirmar pedido</h4>
             <p>Los libros prestados se deben devolver en una semana como máximo.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Portada</th>
+                        <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>Categoría</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="book in loanBooks" :key="book.bookId">
+                        <td>
+                            <img :src="book.cover" class="listCover">
+                        </td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.category }}</td>
+                        <td>
+                            <button @click="removeFromList(book)" class="btn-floating waves-effect-light black center">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="modal-footer">
-            <a class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+            <a class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
+            <a @click="confirmLoan()" class="modal-close waves-effect waves-light btn-flat">Confirmar</a>
         </div>
     </div>
 
@@ -40,6 +66,8 @@
                         :author="book.fullName"
                         :summary="book.summary"
                         :is-verified="isVerified"
+                        :copies="book.copies"
+                        :loan-copies="book.loanCopies"
                         />
                     </div>
                 </div>
@@ -58,13 +86,13 @@ import BookCardComponent from '@/components/BookCardComponent.vue';
 
 const verifyUser = inject('verifyUser');
 const bookList = ref([]);
+const loanBooks = ref(new Set());
 const isVerified = ref(false);
 
 onMounted(async () => {
     isVerified.value = await verifyUser();
     await initMaterialize();
     await fetchBooks();
-    console.log(bookList.value);
 });
 function initMaterialize(){
     const modal = document.querySelectorAll('.modal');
@@ -77,6 +105,15 @@ async function fetchBooks(){
         }
     })
     .then(async res => {
+        bookList.value = [];
+        // Elimina del catalogo los libros en lista de pedidos prestados
+        for(const book of loanBooks.value) {
+            for (let i = 0; i < res.data.length; i++) {
+                const catalogBook = res.data[i];
+                if (book.bookId == catalogBook.bookId)
+                    res.data.splice(i, 1);
+            }
+        }
         bookList.value = res.data;
     })
     .catch(error => {
@@ -92,9 +129,44 @@ function openModal() {
     modalInstance.open();
 }
 function addBookToList(res){
-    M.toast({html: `${JSON.stringify(res)}`});
+    loanBooks.value.add(res);
+    M.toast({html: `${res.title} agregado a la lista`, classes: 'green'});
+    fetchBooks();
 }
-
+async function removeFromList(res){
+    if (loanBooks.value.delete(res))
+        M.toast({html: `${res.title} eliminado de la lista`, classes: 'red lighten-1'});
+    const modalInstance = M.Modal.getInstance(document.querySelector('#loanModal'));
+    await modalInstance.close();
+    fetchBooks();
+}
+function confirmLoan(){
+    if (loanBooks.value.size == 0){
+        M.toast({html: `La lista de libros pedidos está vacía`, classes: 'red'});
+        return;
+    }
+    const data = {booksList:[]};
+    for (const book of loanBooks.value){
+        data.booksList.push(book.bookId);
+    }
+    data.booksList = JSON.stringify(data.booksList);
+    axios.post(`${process.env.VUE_APP_API_URL}/loans/new`, data, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(() => {
+        M.toast({html: `Pedido realizado: pasar por el libro al establecimiento a la brevedad`, classes: 'green'});
+        fetchBooks();
+    })
+    .catch(error => {
+        if (error.response.data){
+            M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+        } else{
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+        }
+    });
+}
 </script>
 
 <style scoped>

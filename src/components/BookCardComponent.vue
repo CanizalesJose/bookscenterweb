@@ -1,13 +1,15 @@
 <template>
     <div class="col s3">
-        <div @click="addBookModal()" class="card hoverable">
+        <div @click="addBookModal()" class="card hoverable waves-effect waves-green">
             <div class="card-image">
                 <img :src="cover">
-                <span class="card-title white black-text">{{ title }}</span>
+                <span class="card-title white black-text sm">{{ title }}</span>
             </div>
             <div class="card-content left-align">
                 <p><b>Escrito por: </b>{{ author }}</p>
                 <p><b>Categoría: </b>{{ category }}</p>
+                <p v-if="copies-loanCopies != 0"><b>Stock:</b> {{ copies - loanCopies }}</p>
+                <p v-if="copies-loanCopies == 0" class="red-text">Out of Stock</p>
                 <p class="truncate-multiline">
                     <b>Sinopsis: </b>{{ summary }}
                 </p>
@@ -47,10 +49,11 @@
                     </tr>
                 </tbody>
             </table>
+            <p class="red-text" v-if="copies-loanCopies == 0">Este libro está agotado.</p>
         </div>
         <div class="modal-footer">
             <a class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
-            <a v-if="isVerified" @click="confirmAddBook" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+            <a v-if="isVerified && copies-loanCopies != 0" @click="confirmAddBook" class="modal-close waves-effect waves-green btn-flat">Agregar a la lista</a>
         </div>
     </div>
 </template>
@@ -66,7 +69,7 @@ onMounted(() => {
 
 const emit = defineEmits(['book-added']);
 
-const selBook = ref({catalogId:null, bookId:null, cover:null, title:null, author:null, category:null, summary:null});
+const selBook = ref({catalogId:null, bookId:null, cover:null, title:null, author:null, category:null, summary:null, copies:null, loanCopies:null});
 
 function addBookModal(){
     const modalInstance = M.Modal.getInstance(document.querySelector(`#addBookModal${props.catalogId}${props.bookId}`));
@@ -80,11 +83,13 @@ function confirmAddBook(){
     selBook.value.category = props.category;
     selBook.value.author = props.author;
     selBook.value.summary = props.summary;
+    selBook.value.copies = props.copies;
+    selBook.value.loanCopies = props.loanCopies;
     emit('book-added', selBook.value);
 }
 
 // eslint-disable-next-line
-const props = defineProps(['bookId', 'catalogId', 'cover', 'title', 'category', 'author', 'summary', 'isVerified']);
+const props = defineProps(['bookId', 'catalogId', 'cover', 'title', 'category', 'author', 'summary', 'isVerified', 'copies', 'loanCopies']);
 
 </script>
 
@@ -113,7 +118,7 @@ table th, table td {
     align-items: center;
 }
 .card-content {
-    height: 150px;
+    height: 170px;
 }
 .card{
     min-height: 400px;
