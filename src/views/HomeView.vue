@@ -12,26 +12,10 @@
             </p>
             
             <div class="divider"></div>
-            <h5 class="header">Top Lecturas del mes</h5>
+            <h5 class="header">Top Lecturas</h5>
             <div class="carousel">
-                <a class="carousel-item" href="#1">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
-                </a>
-
-                <a class="carousel-item" href="#2">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
-                </a>
-
-                <a class="carousel-item" href="#3">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
-                </a>
-
-                <a class="carousel-item" href="#4">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
-                </a>
-
-                <a class="carousel-item" href="#5">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s">
+                <a class="carousel-item" :href="'#'+topLoans.indexOf(book)" v-for="book in topLoans" :key="book.bookId">
+                    <img :src="book.cover">
                 </a>
             </div>
 
@@ -44,12 +28,26 @@
 
 <script setup>
 import HeaderComponent from '@/components/HeaderComponent.vue';
-import { onMounted, inject } from 'vue';
+import axios from 'axios';
+import { onMounted, inject, ref, onBeforeMount } from 'vue';
 /* global M */
 const verifyUser = inject('verifyUser');
+const topLoans = ref([]);
+onBeforeMount(async () => {
+    await fetchTopLoans();
+});
 onMounted(async () => {
     await verifyUser();
+    await initMaterialize();
+});
+function initMaterialize() {
     const carouselElems = document.querySelectorAll('.carousel');
     M.Carousel.init(carouselElems);
-});
+}
+function fetchTopLoans(){
+    axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchTopLoans`)
+    .then(res => {
+        topLoans.value = res.data;
+    });
+}
 </script>
