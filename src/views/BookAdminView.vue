@@ -245,7 +245,7 @@
                 </thead>
                 <tbody>
                     <!-- Generar registros de tabla dinámicamente -->
-                    <tr v-for="book in booksList" :key="book.id">
+                    <tr v-for="book in booksListPagination" :key="book.id">
                         <td><img class="listCover" v-bind:src="book.imageUrl" v-bind:alt="book.title"></td>
                         <td>{{ book.isbn }}</td>
                         <td>{{ book.title }}</td>
@@ -268,6 +268,18 @@
                     </tr>
                 </tbody>
             </table>
+
+            <ul class="pagination">
+                <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
+                    <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
+                </li>
+                <li v-for="page in pageCount" :key="page" class="waves-effect" :class="{ 'active': page === currentPage }">
+                    <a href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                </li>
+                <li class="waves-effect" :class="{ 'disabled': currentPage === pageCount }">
+                    <a href="#" @click.prevent="changePage(currentPage + 1)">»</a>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -277,7 +289,7 @@
 /* global M */
 import HeaderComponent from '@/components/HeaderComponent.vue';
 import axios from 'axios';
-import { onMounted, inject, ref } from 'vue';
+import { onMounted, inject, ref, computed } from 'vue';
 
 const verifyAdmin = inject('verifyAdmin');
 const selId = ref(null);
@@ -295,6 +307,20 @@ const selImageUrl = ref(null);
 const booksList = ref([]);
 const categoriesList = ref([]);
 const authorsList = ref([]);
+const currentPage = ref(1);
+const rowsPerPage = 3;
+const booksListPagination = computed(() => {
+    const start = (currentPage.value - 1) * rowsPerPage;
+    return booksList.value.slice(start, start + rowsPerPage);
+});
+const pageCount = computed(() => {
+    return Math.ceil(booksList.value.length / rowsPerPage);
+});
+function changePage(page){
+    if (page < 1 || page > pageCount.value)
+        return;
+    currentPage.value = page;
+}
 
 onMounted(async () => {
     if (!await verifyAdmin())

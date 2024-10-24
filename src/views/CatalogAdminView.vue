@@ -182,7 +182,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="book in booksInCatalog" :key="book.bookId">
+                            <tr v-for="book in booksInCatalogPagination" :key="book.bookId">
                                 <td><img :src="book.imageUrl" class="listCover"></td>
                                 <td>{{ book.title }}</td>
                                 <td>{{ book.fullName }}</td>
@@ -217,6 +217,17 @@
                             </tr>
                         </tbody>
                     </table>
+                    <ul class="pagination">
+                        <li class="waves-effect" :class="{ 'disabled': currentPageCatalog === 1 }">
+                            <a href="#" @click.prevent="changePageCatalog(currentPageCatalog - 1)">«</a>
+                        </li>
+                        <li v-for="page in pageCountCatalog" :key="page" class="waves-effect" :class="{ 'active': page === currentPageCatalog }">
+                            <a href="#" @click.prevent="changePageCatalog(page)">{{ page }}</a>
+                        </li>
+                        <li class="waves-effect" :class="{ 'disabled': currentPageCatalog === pageCountCatalog }">
+                            <a href="#" @click.prevent="changePageCatalog(currentPageCatalog + 1)">»</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -242,7 +253,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="book in booksNotInCatalogList" :key="book.bookId">
+                            <tr v-for="book in booksNotInCatalogListPagination" :key="book.bookId">
                                 <td><img :src="book.imageUrl" class="listCover"></td>
                                 <td>{{ book.title }}</td>
                                 <td>{{ book.fullName }}</td>
@@ -261,6 +272,17 @@
                             </tr>
                         </tbody>
                     </table>
+                    <ul class="pagination">
+                        <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
+                            <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
+                        </li>
+                        <li v-for="page in pageCount" :key="page" class="waves-effect" :class="{ 'active': page === currentPage }">
+                            <a href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                        </li>
+                        <li class="waves-effect" :class="{ 'disabled': currentPage === pageCount }">
+                            <a href="#" @click.prevent="changePage(currentPage + 1)">»</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -270,7 +292,7 @@
 <script setup>
 /* eslint-disable */
 /* global M */
-import { onMounted, inject, ref} from 'vue';
+import { onMounted, inject, ref, computed} from 'vue';
 import axios from 'axios';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 
@@ -282,6 +304,38 @@ const selBookId = ref(null);
 const selVisible = ref(null);
 const selBook = ref({title:null, author:null, category:null, cover:null, summary:null});
 const textAreaRef = ref(null);
+
+// Paginación para libros en catalogo
+const currentPageCatalog = ref(1);
+const rowsPerPageCatalog = 2;
+const booksInCatalogPagination = computed(() => {
+    const start = (currentPageCatalog.value - 1) * rowsPerPageCatalog;
+    return booksInCatalog.value.slice(start, start + rowsPerPageCatalog);
+});
+const pageCountCatalog = computed(() => {
+    return Math.ceil(booksInCatalog.value.length / rowsPerPageCatalog);
+});
+function changePageCatalog(page){
+    if (page < 1 || page > pageCountCatalog.value)
+        return;
+    currentPageCatalog.value = page;
+}
+
+// Paginación para libros fuera de catalogo
+const currentPage = ref(1);
+const rowsPerPage = 3;
+const booksNotInCatalogListPagination = computed(() => {
+    const start = (currentPage.value - 1) * rowsPerPage;
+    return booksNotInCatalogList.value.slice(start, start + rowsPerPage);
+});
+const pageCount = computed(() => {
+    return Math.ceil(booksNotInCatalogList.value.length / rowsPerPage);
+});
+function changePage(page){
+    if (page < 1 || page > pageCount.value)
+        return;
+    currentPage.value = page;
+}
 
 onMounted(async () => {
     if (!await verifyAdmin())

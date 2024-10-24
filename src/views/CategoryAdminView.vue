@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                         <!-- Generar registros de tabla dinámicamente -->
-                        <tr v-for="category in categories" :key="category.id">
+                        <tr v-for="category in categoriesPagination" :key="category.id">
                             <td>{{ category.id }}</td>
                             <td>{{ category.descr }}</td>
                             <td>
@@ -59,6 +59,17 @@
                         </tr>
                     </tbody>
                 </table>
+                <ul class="pagination">
+                    <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
+                        <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
+                    </li>
+                    <li v-for="page in pageCount" :key="page" class="waves-effect" :class="{ 'active': page === currentPage }">
+                        <a href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                    </li>
+                    <li class="waves-effect" :class="{ 'disabled': currentPage === pageCount }">
+                        <a href="#" @click.prevent="changePage(currentPage + 1)">»</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -146,15 +157,15 @@
         </div>
         <div class="modal-footer">
             <div class="divider"></div>
-            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancelar</a>
-            <a href="#!" @click="confirmRegister" class="modal-close waves-effect waves-green btn-flat">Registrar</a>
+            <a class="modal-close waves-effect waves-red btn-flat">Cancelar</a>
+            <a @click="confirmRegister" class="modal-close waves-effect waves-green btn-flat">Registrar</a>
         </div>
     </div>
 </template>
 
 <script setup>
 /* global M */
-import {ref, onMounted, inject} from 'vue';
+import {ref, onMounted, inject, computed} from 'vue';
 import axios from 'axios';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 
@@ -164,6 +175,20 @@ const selectedId = ref(null);
 const selectedDscr = ref(null);
 const newId = ref(null);
 const newDescr = ref(null);
+const currentPage = ref(1);
+const rowsPerPage = 5;
+const categoriesPagination = computed(() => {
+    const start = (currentPage.value - 1) * rowsPerPage;
+    return categories.value.slice(start, start + rowsPerPage);
+});
+const pageCount = computed(() => {
+    return Math.ceil(categories.value.length / rowsPerPage);
+});
+function changePage(page){
+    if (page < 1 || page > pageCount.value)
+        return;
+    currentPage.value = page;
+}
 
 onMounted(async () => {
     if (!await verifyAdmin()){

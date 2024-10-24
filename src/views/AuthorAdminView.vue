@@ -144,7 +144,7 @@
                     </thead>
                     <tbody>
                         <!-- Generar tabla de registros -->
-                        <tr v-for="author in authorsList" :key="author.id">
+                        <tr v-for="author in authorsListPagination" :key="author.id">
                             <td>{{ author.id }}</td>
                             <td>{{ author.fullName }}</td>
                             <td>{{ author.nationality }}</td>
@@ -161,6 +161,17 @@
                         </tr>
                     </tbody>
                 </table>
+                <ul class="pagination">
+                    <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
+                        <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
+                    </li>
+                    <li v-for="page in pageCount" :key="page" class="waves-effect" :class="{ 'active': page === currentPage }">
+                        <a href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                    </li>
+                    <li class="waves-effect" :class="{ 'disabled': currentPage === pageCount }">
+                        <a href="#" @click.prevent="changePage(currentPage + 1)">»</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -168,7 +179,7 @@
 
 <script setup>
 /* global M */
-import { ref, onMounted, inject} from 'vue';
+import { ref, onMounted, inject, computed} from 'vue';
 import axios from 'axios';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 
@@ -184,6 +195,20 @@ const newId = ref(null);
 const newFullname = ref(null);
 const newNationality = ref(null);
 const authorsList = ref([]);
+const currentPage = ref(1);
+const rowsPerPage = 5;
+const authorsListPagination = computed(() => {
+    const start = (currentPage.value - 1) * rowsPerPage;
+    return authorsList.value.slice(start, start + rowsPerPage);
+});
+const pageCount = computed(() => {
+    return Math.ceil(authorsList.value.length / rowsPerPage);
+});
+function changePage(page){
+    if (page < 1 || page > pageCount.value)
+        return;
+    currentPage.value = page;
+}
 
 async function fetchAuthors() {
     try {

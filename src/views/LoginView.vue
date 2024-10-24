@@ -78,7 +78,7 @@ import axios from 'axios';
     async function valInput() {
         if (username.value.length != 0 && password.value.length != 0){
             try {
-                let result = await axios.post(`http://localhost:5000/api/users/login/${username.value}`, {
+                let result = await axios.post(`${process.env.VUE_APP_API_URL}/users/login/${username.value}`, {
                     password: password.value
                 });
                 // En caso de éxito, en result tenemos el token, el usuario y el usertype
