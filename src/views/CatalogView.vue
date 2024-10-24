@@ -99,7 +99,7 @@ function initMaterialize(){
     M.Modal.init(modal);
 }
 async function fetchBooks(){
-    await axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchCatalog`, {
+    await axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchVisibleCatalog`, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -117,7 +117,7 @@ async function fetchBooks(){
         bookList.value = res.data;
     })
     .catch(error => {
-        if (error.response.data){
+        if (error.response && error.response.data){
             M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
         } else{
             M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
