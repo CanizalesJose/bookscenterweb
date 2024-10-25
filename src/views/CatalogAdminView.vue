@@ -406,7 +406,7 @@ async function confirmChangeVisibility(){
             M.toast({html: 'Libro ocultado del catálogo', classes: 'green darken-1'});
         })
         .catch(error => {
-            M.toast({html: `Error en la solicitud: ${error.message}`});
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
         });
     }else {
         // si el registro no es visible, entonces lo hace visible
@@ -472,7 +472,7 @@ async function confirmDelete(){
         M.toast({html: `${res.data.message}`, classes: 'red darken-1'});
     })
     .catch(error => {
-        M.toast({html: `Error en la solicitud: ${error.message}`});
+        M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'red'});
     });
     fetchCatalog();
     fetchNotInCatalog();
@@ -502,7 +502,7 @@ async function confirmAddToCatalog(){
         fetchNotInCatalog();
     })
     .catch(error => {
-        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'green lighten-1'});
+        M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red lighten-1'});
     });
 }
 </script>

@@ -42,7 +42,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><img :src="cover" class="listCover"></td>
+                        <td><img :src="cover" class="listCover materialboxed"></td>
                         <td>{{ title }}</td>
                         <td>{{ category }}</td>
                         <td>{{ author }}</td>
@@ -65,6 +65,8 @@ import {ref, defineEmits, onMounted} from 'vue';
 onMounted(() => {
     const modal = document.querySelectorAll('.modal');
     M.Modal.init(modal);
+    const materialBoxedElems = document.querySelectorAll('.materialboxed');
+    M.Materialbox.init(materialBoxedElems);
 });
 
 const emit = defineEmits(['book-added']);

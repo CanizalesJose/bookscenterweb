@@ -60,7 +60,7 @@
                         <tbody>
                             <tr v-for="book in loan.books" :key="book.bookId">
                                 <td>
-                                    <img :src="book.cover" class="listCover">
+                                    <img :src="book.cover" class="listCover materialboxed">
                                 </td>
                                 <td>{{ book.title }}</td>
                                 <td>{{ book.author }}</td>
@@ -124,7 +124,7 @@
                         <tbody>
                             <tr v-for="book in loan.books" :key="book.bookId">
                                 <td>
-                                    <img :src="book.cover" class="listCover">
+                                    <img :src="book.cover" class="listCover materialboxed">
                                 </td>
                                 <td>{{ book.title }}</td>
                                 <td>{{ book.author }}</td>
@@ -169,7 +169,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <img :src="selBookCover" class="listCover">
+                            <img :src="selBookCover" class="listCover materialboxed">
                         </td>
                         <td>{{ selBookTitle }}</td>
                         <td>{{ selBookAuthor }}</td>
@@ -207,9 +207,9 @@ const selBookIsbn = ref(null);
 onMounted(async () => {
     if (!await verifyAdmin())
         return;
-    await initMaterialize();
     await fetchReturnedLoans();
     await fetchPendingLoans();
+    await initMaterialize();
 });
 
 async function initMaterialize() {
@@ -217,6 +217,8 @@ async function initMaterialize() {
     M.Parallax.init(parallaxElems);
     const modalElems = document.querySelectorAll('.modal');
     M.Modal.init(modalElems);
+    const materialBoxedElems = document.querySelectorAll('.materialboxed');
+    M.Materialbox.init(materialBoxedElems);
 }
 
 async function fetchReturnedLoans(){

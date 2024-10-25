@@ -49,8 +49,8 @@
                         <!-- Headers del libro -->
                         <th>Portada</th>
                         <th>Titulo</th>
-                        <th>ISBN</th>
                         <th>Autor</th>
+                        <th>ISBN</th>
                         <th>Editora</th>
                         <th>Año de publicación</th>
                         <th>Categoría</th>
@@ -64,8 +64,8 @@
                            <img class="listCover" v-bind:src="selImageUrl" alt="Portada">
                         </td>
                          <td>{{ selTitle }}</td>
-                         <td>{{ selIsbn }}</td>
                          <td>{{ selFullname }}<br>({{ selAuthor }})</td>
+                         <td>{{ selIsbn }}</td>
                          <td>{{ selPublisher }}</td>
                          <td>{{ selPublishYear }}</td>
                          <td>{{ selDescr }}<br>({{ selCategory }})</td>
@@ -133,8 +133,8 @@
                         <!-- Datos de libro -->
                         <th>Portada</th>
                         <th>Titulo</th>
-                        <th>ISBN</th>
                         <th>Autor</th>
+                        <th>ISBN</th>
                         <th>Editora</th>
                         <th>Año</th>
                         <th>Categoría</th>
@@ -145,8 +145,8 @@
                         <!-- Nuevos datos -->
                         <td><img v-bind:src="selImageUrl" class="listCover"></td>
                         <td>{{ selTitle }}</td>
-                        <td>{{ selIsbn }}</td>
                         <td>{{ selFullname }} <br> ({{ selAuthor }})</td>
+                        <td>{{ selIsbn }}</td>
                         <td>{{ selPublisher }}</td>
                         <td>{{ selPublishYear }}</td>
                         <td>{{ selDescr }} <br> ({{ selCategory }})</td>
