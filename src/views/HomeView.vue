@@ -12,11 +12,13 @@
             </p>
             
             <div class="divider"></div>
-            <h5 class="header">Top Lecturas</h5>
-            <div class="carousel">
-                <a class="carousel-item" :href="'#'+topLoans.indexOf(book)" v-for="book in topLoans" :key="book.bookId">
-                    <img :src="book.cover">
-                </a>
+            <div v-if="topLoans.length >= 5">
+                <h5 class="header">Top Lecturas</h5>
+                <div class="carousel">
+                    <a class="carousel-item" :href="'#'+topLoans.indexOf(book)" v-for="book in topLoans" :key="book.bookId">
+                        <img :src="book.cover">
+                    </a>
+                </div>
             </div>
 
             <p>
@@ -48,6 +50,10 @@ function fetchTopLoans(){
     axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchTopLoans`)
     .then(res => {
         topLoans.value = res.data;
+    })
+    .catch(error => {
+        if (error.response)
+            M.toast({html: `${error.response.data.message}`, classes: 'yellow darken-4'});
     });
 }
 </script>

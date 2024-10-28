@@ -157,6 +157,7 @@ function confirmLoan(){
     })
     .then(() => {
         M.toast({html: `Pedido realizado: pasar por el libro al establecimiento a la brevedad`, classes: 'green'});
+        loanBooks.value.clear();
         fetchBooks();
     })
     .catch(error => {

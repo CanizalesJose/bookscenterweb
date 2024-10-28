@@ -178,7 +178,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in usersList" :key="user.username">
+                    <tr v-for="user in usersListPagination" :key="user.username">
                         <td>{{ user.username }}</td>
                         <td>{{ user.usertype }}</td>
                         <td>{{ user.contactNumber }}</td>
@@ -200,6 +200,17 @@
                     </tr>
                 </tbody>
             </table>
+            <ul class="pagination">
+                <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
+                    <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
+                </li>
+                <li v-for="page in pageCount" :key="page" class="waves-effect" :class="{ 'active': page === currentPage }">
+                    <a href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                </li>
+                <li class="waves-effect" :class="{ 'disabled': currentPage === pageCount }">
+                    <a href="#" @click.prevent="changePage(currentPage + 1)">»</a>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -207,7 +218,7 @@
 <script setup>
 /* global M */
 /* eslint-disable */
-import {ref, onMounted, inject} from 'vue';
+import {ref, onMounted, inject, computed} from 'vue';
 import axios from 'axios';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 
@@ -220,6 +231,21 @@ const selContactNumber = ref(null);
 const selEmail = ref(null);
 const checkEmail = /^[a-zA-Z0-9]+\@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
 const checkNumber = /^[0-9]{10}|[0-9]{3}-[0-9]{3}-[0-9]{4}$/
+
+const currentPage = ref(1);
+const rowsPerPage = 10;
+const usersListPagination = computed(() => {
+    const start = (currentPage.value - 1) * rowsPerPage;
+    return usersList.value.slice(start, start + rowsPerPage);
+});
+const pageCount = computed(() => {
+    return Math.ceil(usersList.value.length / rowsPerPage);
+});
+function changePage(page){
+    if (page < 1 || page > pageCount.value)
+        return;
+    currentPage.value = page;
+}
 
 
 onMounted(async () => {
