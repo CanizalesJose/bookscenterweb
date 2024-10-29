@@ -11,6 +11,7 @@ import LoanAdminView from '@/views/LoanAdminView.vue';
 import CatalogAdminView from '@/views/CatalogAdminView.vue';
 import AboutView from '@/views/AboutView.vue';
 import NotFound from '@/views/NotFound.vue';
+import myUserView from '@/views/myUserView.vue';
 
 const routes = [
   {
@@ -66,6 +67,11 @@ const routes = [
     path: '/about',
     name: 'AboutView',
     component: AboutView
+  },
+  {
+    path: '/myUser',
+    name: 'myUser',
+    component: myUserView
   },
   {
     path: '/:catchAll(.*)',
