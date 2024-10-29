@@ -36,7 +36,11 @@
                     </li>
                 </ul>
                 <ul class="right hide-on-med-and-down">
-                    <li v-if="username" style="padding-right: 30px;">{{ username }}</li>
+                    <li v-if="username" style="padding-right: 30px;">
+                        <a href="/myUser">
+                            <u>{{ username }}</u>
+                        </a>
+                    </li>
                     <li v-if="usertype">{{ usertype }}</li>
                     <li v-else class="hoverable"><a href="/login">Iniciar Sesión &nbsp;&nbsp;&nbsp;</a></li>
                     <li v-if="usertype && username" style="padding-right: 30px; padding-left: 30px;" class="red-text"><a href="/logout">Cerrar Sesión</a></li>
