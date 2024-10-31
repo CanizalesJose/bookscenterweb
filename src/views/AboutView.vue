@@ -2,7 +2,7 @@
     <HeaderComponent></HeaderComponent>
     <div class="container halign-wrapper">
         <h3 class="center">Acerca de...</h3>
-        <div class="divider" ></div>
+        <div class="divider"></div>
         <div class="row">
             <div class="col s12">
                 <p>
@@ -12,12 +12,12 @@
         </div>
         <div class="divider" ></div>
         <div class="row">
-            <div class="col s3">
+            <div class="col s5">
                 <p>
                     Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed id ullamcorper velit. Aliquam erat volutpat. Curabitur interdum mauris non arcu pharetra congue. Proin euismod sodales urna, sit amet pretium metus blandit eu
                 </p>
             </div>
-            <div class="col s7 offset-s2">
+            <div class="col s7 offset">
                 <ul class="collection with-header">
                     <li class="collection-header"><h6>Aliquam bibendum porttitor arcu ut viverra</h6></li>
                     <li class="collection-item">Nullam augue elit, pellentesque ut gravida ac, venenatis quis orci.</li>

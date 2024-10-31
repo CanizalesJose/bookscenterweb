@@ -54,7 +54,18 @@
         <div class="row">
             <div class="col s12 m12">
                 <div class="section center">
+                    <div class="input-field">
+                        <i class="material-icons prefix">search</i>
+                        <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
+                        <label for="search">Buscar</label>
+                    </div>
                     <!-- Aqui se construyen las cards con los libros -->
+                    <div v-if="bookList.length == 0">
+                        <br>
+                        <h6>No hay resultados...</h6>
+                        <br>
+                        <img src="../assets/img/notFound.jpg">
+                    </div>
                     <div v-for="book in bookList" :key="book.catalogId+'-'+book.bookId">
                         <BookCardComponent
                         @book-added="addBookToList"
@@ -88,6 +99,7 @@ const verifyUser = inject('verifyUser');
 const bookList = ref([]);
 const loanBooks = ref(new Set());
 const isVerified = ref(false);
+const searchText = ref('');
 
 onMounted(async () => {
     isVerified.value = await verifyUser();
@@ -97,6 +109,8 @@ onMounted(async () => {
 function initMaterialize(){
     const modal = document.querySelectorAll('.modal');
     M.Modal.init(modal);
+    var tooltip = document.querySelectorAll('.tooltipped');
+    M.Tooltip.init(tooltip);
 }
 async function fetchBooks(){
     await axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchVisibleCatalog`, {
@@ -167,6 +181,32 @@ function confirmLoan(){
             M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
         }
     });
+}
+function performSearch(){
+    if (searchText.value.length == 0){
+        fetchBooks();
+    }else {
+        axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchByTitle/${searchText.value}`)
+        .then(res => {
+            bookList.value = [];
+            // Elimina del catalogo los libros en lista de pedidos prestados
+            for(const book of loanBooks.value) {
+                for (let i = 0; i < res.data.length; i++) {
+                    const catalogBook = res.data[i];
+                    if (book.bookId == catalogBook.bookId)
+                        res.data.splice(i, 1);
+                }
+            }
+            bookList.value = res.data;
+        })
+        .catch(error => {
+            if (error.response && error.response.data){
+                M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+            } else{
+                M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+            }
+        });
+    }
 }
 </script>
 

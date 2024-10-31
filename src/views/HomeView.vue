@@ -3,7 +3,7 @@
     <div class="section">
         <div class="container center">
             <br><br>
-            <h3 class="header">Bienvenido a BookCenter</h3>
+            <h3 class="header">Bienvenido a BooksCenter</h3>
             <br>
             <div class="divider"></div>
             <br>
@@ -12,11 +12,11 @@
             </p>
             
             <div class="divider"></div>
-            <div v-if="topLoans.length >= 5">
-                <h5 class="header">Top Lecturas</h5>
+            <div v-if="topLoans.length == 5">
+                <h5 class="header">Top 5 Lecturas</h5>
                 <div class="carousel">
-                    <a class="carousel-item" :href="'#'+topLoans.indexOf(book)" v-for="book in topLoans" :key="book.bookId">
-                        <img :src="book.cover">
+                    <a class="carousel-item" href="/catalog" v-for="book in topLoans" :key="book.bookId">
+                        <img :src="book.cover" @load="initMaterialize()">
                     </a>
                 </div>
             </div>
