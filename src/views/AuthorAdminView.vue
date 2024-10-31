@@ -132,35 +132,42 @@
             <div class="section center">
                 <h3>Administrar autores</h3>
                 <br><br>
-                <table class="highlight responsive-table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre completo</th>
-                            <th>Nacionalidad</th>
-                            <th>Modificar</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Generar tabla de registros -->
-                        <tr v-for="author in authorsListPagination" :key="author.id">
-                            <td>{{ author.id }}</td>
-                            <td>{{ author.fullName }}</td>
-                            <td>{{ author.nationality }}</td>
-                            <td>
-                                <button @click="updateModal(author.id, author.fullName, author.nationality)" class="btn-floating waves-effect waves-light green lighten-1">
-                                    <i class="material-icons prefix">edit</i>
-                                </button>
-                            </td>
-                            <td>
-                                <button @click="deleteModal(author.id, author.fullName, author.nationality)" class="btn-floating waves-effect waves-light red lighten-1">
-                                    <i class="material-icons prefix">delete</i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="input-field">
+                    <i class="material-icons prefix">search</i>
+                    <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
+                    <label for="search">Buscar</label>
+                </div>
+                <div class="tableContainer">
+                    <table class="highlight responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre completo</th>
+                                <th>Nacionalidad</th>
+                                <th>Modificar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Generar tabla de registros -->
+                            <tr v-for="author in authorsListPagination" :key="author.id">
+                                <td>{{ author.id }}</td>
+                                <td>{{ author.fullName }}</td>
+                                <td>{{ author.nationality }}</td>
+                                <td>
+                                    <button @click="updateModal(author.id, author.fullName, author.nationality)" class="btn-floating waves-effect waves-light green lighten-1">
+                                        <i class="material-icons prefix">edit</i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button @click="deleteModal(author.id, author.fullName, author.nationality)" class="btn-floating waves-effect waves-light red lighten-1">
+                                        <i class="material-icons prefix">delete</i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <ul class="pagination">
                     <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
                         <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
@@ -195,6 +202,7 @@ const newId = ref(null);
 const newFullname = ref(null);
 const newNationality = ref(null);
 const authorsList = ref([]);
+const searchText = ref('');
 const currentPage = ref(1);
 const rowsPerPage = 5;
 const authorsListPagination = computed(() => {
@@ -335,6 +343,28 @@ async function confirmDelete() {
         M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red lighten-1'});
     });
 }
+function performSearch(){
+    if (searchText.value.length == 0){
+        fetchAuthors();
+    }else{
+        // Se realiza la busqueda con una petición
+        axios.get(`${process.env.VUE_APP_API_URL}/authors/findByName/${searchText.value}`, {
+            headers: {
+                token: localStorage.getItem('token')
+            }
+        })
+        .then(res => {
+            currentPage.value = 1;
+            authorsList.value = res.data;
+        })
+        .catch(error => {
+            if (error.response.data)
+                M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+            else
+                M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+        });
+    }
+}
 </script>
 
 <style scoped>
@@ -352,5 +382,8 @@ table th, table td {
 }
 .parallax-container {
     height: 200px;
+}
+.tableContainer {
+    height: 370px;
 }
 </style>
