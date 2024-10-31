@@ -157,7 +157,7 @@
 
     <div class="parallax-container">
         <div class="parallax">
-            <img src="https://images.freeimages.com/images/large-previews/5c9/old-libary-1231166.jpg?fmt=webp&h=350">
+            <img src="../assets/img/generalBackground06.jpg">
         </div>
     </div>
 

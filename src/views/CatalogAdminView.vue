@@ -162,6 +162,13 @@
             </div>
         </div>
         <div class="divider"></div>
+    </div>
+    <div class="parallax-container">
+        <div class="parallax">
+            <img src="../assets/img/generalBackground07.jpg">
+        </div>
+    </div>
+    <div class="container">
         <div class="row">
             <div class="col s12 m12">
                 <div class="section center">
@@ -233,6 +240,15 @@
         </div>
 
         <div class="divider"></div>
+    </div>
+
+    <div class="parallax-container">
+        <div class="parallax">
+            <img src="../assets/img/generalBackground08.jpg">
+        </div>
+    </div>
+
+    <div class="container">
         <div class="row">
             <div class="col s12 m12">
                 <div class="section center">
@@ -349,6 +365,8 @@ function initMaterialize(){
     M.Modal.init(modal);
     const selectElems = document.querySelectorAll('select');
     M.FormSelect.init(selectElems);
+    const parallaxElems = document.querySelectorAll('.parallax');
+    M.Parallax.init(parallaxElems);
 }
 async function fetchNotInCatalog(){
     await axios.get(`${process.env.VUE_APP_API_URL}/catalog/fetchNotInCatalog`, {

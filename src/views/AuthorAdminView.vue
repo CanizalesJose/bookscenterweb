@@ -124,7 +124,7 @@
     </div>
     <div class="parallax-container">
         <div class="parallax">
-            <img src="https://images.freeimages.com/images/large-previews/169/writing-1245534.jpg?fmt=webp&h=350">
+            <img src="..//assets/img/generalBackground02.jpg">
         </div>
     </div>
     <div class="container">

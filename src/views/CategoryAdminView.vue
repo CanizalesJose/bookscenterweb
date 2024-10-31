@@ -22,7 +22,7 @@
     </div>
     <div class="parallax-container">
         <div class="parallax">
-            <img src="https://images.unsplash.com/photo-1626473401833-a07f0acbe6ed?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+            <img src="../assets/img/generalBackground01.jpg">
         </div>
     </div>
     <div class="container">

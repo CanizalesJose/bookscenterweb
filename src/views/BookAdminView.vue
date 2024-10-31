@@ -216,7 +216,7 @@
     </div>
     <div class="parallax-container">
         <div class="parallax">
-            <img src="https://images.freeimages.com/images/large-previews/0f8/books-and-window-1219757.jpg">
+            <img src="../assets/img/generalBackground03.jpg">
         </div>
     </div>
     <div class="container">

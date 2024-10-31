@@ -17,7 +17,7 @@
     <!-- Imagen -->
     <div class="parallax-container">
         <div class="parallax">
-            <img src="https://img.freepik.com/free-photo/view-books-arrangement_23-2148882757.jpg?t=st=1728429445~exp=1728433045~hmac=cddf2eecac61ffc3ea9fa3c0644344e882f067eb039206d845254e9beb4517f2&w=826">
+            <img src="../assets/img/generalBackground04.jpg">
         </div>
     </div>
     <!-- Pendientes -->
@@ -85,7 +85,7 @@
     <!-- Imagen -->
     <div class="parallax-container">
         <div class="parallax">
-            <img src="https://img.freepik.com/free-photo/textbooks-lying-near-bookcase_23-2147845949.jpg?t=st=1728430549~exp=1728434149~hmac=b97c53a32592849739fb9252e946e071096f10c2d000cd254c00bc6f690572c4&w=740">
+            <img src="../assets/img/generalBackground05.jpg">
         </div>
     </div>
     <!-- Registro -->
