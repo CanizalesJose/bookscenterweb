@@ -31,34 +31,41 @@
                 <div class="section center">
                     <h3>Gestión de Categorías</h3>
                 </div>
+                <div class="input-field">
+                    <i class="material-icons prefix">search</i>
+                    <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
+                    <label for="search">Buscar</label>
+                </div>
                 <!-- Construir tabla con datos de categorias -->
-                <table class="highlight responsive-table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Descripción</th>
-                            <th>Actualizar</th>
-                            <th>Borrar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Generar registros de tabla dinámicamente -->
-                        <tr v-for="category in categoriesPagination" :key="category.id">
-                            <td>{{ category.id }}</td>
-                            <td>{{ category.descr }}</td>
-                            <td>
-                                <button @click="updateModal(category.id, category.descr)" class="btn-floating waves-effect waves-light green lighten-1">
-                                    <i class="material-icons prefix">edit</i>
-                                </button>
-                            </td>
-                            <td>
-                                <button @click="deleteModal(category.id, category.descr)" class="btn-floating waves-effect waves-light red lighten-1">
-                                    <i class="material-icons prefix">delete</i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="tableContainer">
+                    <table class="highlight responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Descripción</th>
+                                <th>Actualizar</th>
+                                <th>Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Generar registros de tabla dinámicamente -->
+                            <tr v-for="category in categoriesPagination" :key="category.id">
+                                <td>{{ category.id }}</td>
+                                <td>{{ category.descr }}</td>
+                                <td>
+                                    <button @click="updateModal(category.id, category.descr)" class="btn-floating waves-effect waves-light green lighten-1">
+                                        <i class="material-icons prefix">edit</i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button @click="deleteModal(category.id, category.descr)" class="btn-floating waves-effect waves-light red lighten-1">
+                                        <i class="material-icons prefix">delete</i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <ul class="pagination">
                     <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
                         <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
@@ -175,6 +182,7 @@ const selectedId = ref(null);
 const selectedDscr = ref(null);
 const newId = ref(null);
 const newDescr = ref(null);
+const searchText = ref('');
 const currentPage = ref(1);
 const rowsPerPage = 5;
 const categoriesPagination = computed(() => {
@@ -323,6 +331,28 @@ async function confirmRegister(){
             M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
     });
 }
+function performSearch(){
+    if (searchText.value.length == 0){
+        fetchCategories();
+    }else{
+        // Se realiza la busqueda con una petición
+        axios.get(`${process.env.VUE_APP_API_URL}/categories/findByDescr/${searchText.value}`, {
+            headers: {
+                token: localStorage.getItem('token')
+            }
+        })
+        .then(res => {
+            currentPage.value = 1;
+            categories.value = res.data;
+        })
+        .catch(error => {
+            if (error.response.data)
+                M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+            else
+                M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+        });
+    }
+}
 </script>
 
 <style scoped>
@@ -333,6 +363,9 @@ table th, table td {
     text-align: center;
     vertical-align: middle;
     padding: 10px;
+}
+.tableContainer {
+    height: 370px;
 }
 .modalContainer{
     padding-left: 5%;
