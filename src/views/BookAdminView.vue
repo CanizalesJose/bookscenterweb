@@ -61,7 +61,7 @@
                     <tr>
                         <!-- Datos del libro creado -->
                         <td>
-                           <img class="listCover" v-bind:src="selImageUrl" alt="Portada">
+                           <img class="listCover materialboxed" v-bind:src="selImageUrl" alt="Portada">
                         </td>
                          <td>{{ selTitle }}</td>
                          <td>{{ selFullname }}<br>({{ selAuthor }})</td>
@@ -143,7 +143,7 @@
                 <tbody>
                     <tr>
                         <!-- Nuevos datos -->
-                        <td><img v-bind:src="selImageUrl" class="listCover"></td>
+                        <td><img v-bind:src="selImageUrl" class="listCover materialboxed"></td>
                         <td>{{ selTitle }}</td>
                         <td>{{ selFullname }} <br> ({{ selAuthor }})</td>
                         <td>{{ selIsbn }}</td>
@@ -180,7 +180,7 @@
                 <tbody>
                     <tr>
                         <!-- Datos del registro eliminado-->
-                        <td><img :src="selImageUrl" class="listCover"></td>
+                        <td><img :src="selImageUrl" class="listCover materialboxed"></td>
                         <td>{{ selTitle }}</td>
                         <td>{{ selFullname }}</td>
                         <td>{{ selPublishYear }}</td>
@@ -226,48 +226,54 @@
                 <h3>Gestión de Libros</h3>
             </div>
             <!-- Construir tabla con datos de libros -->
-            
-            <table class="highlight responsive-table">
-                <thead>
-                    <tr>
-                        <th>Portada</th>
-                        <th>ISBN</th>
-                        <th>Titulo</th>
-                        <th>Autor</th>
-                        <th>Editora</th>
-                        <th>Año</th>
-                        <th>Categoría</th>
-                        <th>Copias</th>
-                        <th>Copias prestadas</th>
-                        <th>Actualizar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Generar registros de tabla dinámicamente -->
-                    <tr v-for="book in booksListPagination" :key="book.id">
-                        <td><img class="listCover" v-bind:src="book.imageUrl" v-bind:alt="book.title"></td>
-                        <td>{{ book.isbn }}</td>
-                        <td>{{ book.title }}</td>
-                        <td>{{ book.fullName }}</td>
-                        <td>{{ book.publisher }}</td>
-                        <td>{{ book.publishYear }}</td>
-                        <td>{{ book.descr }}</td>
-                        <td>{{ book.copies }}</td>
-                        <td>{{ book.loanCopies }}</td>
-                        <td>
-                            <button @click="updateModal(book.id, book.title, book.isbn, book.author, book.fullName, book.publisher, book.publishYear, book.category, book.copies, book.loanCopies, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light green lighten-1 hoverable">
-                                <i class="material-icons prefix">edit</i>
-                            </button>
-                        </td>
-                        <td>
-                            <button @click="deleteModal(book.id, book.title, book.isbn, book.author, book.fullName, book.publisher, book.publishYear, book.category, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light red lighten-1 hoverable">
-                                <i class="material-icons prefix">delete</i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="tableContainer">
+                <div class="input-field">
+                    <i class="material-icons prefix">search</i>
+                    <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
+                    <label for="search">Buscar</label>
+                </div>
+                <table class="highlight responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Portada</th>
+                            <th>ISBN</th>
+                            <th>Titulo</th>
+                            <th>Autor</th>
+                            <th>Editora</th>
+                            <th>Año</th>
+                            <th>Categoría</th>
+                            <th>Copias</th>
+                            <th>Copias prestadas</th>
+                            <th>Actualizar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Generar registros de tabla dinámicamente -->
+                        <tr v-for="book in booksListPagination" :key="book.id">
+                            <td><img @load="initMaterialBoxed()" class="listCover materialboxed" v-bind:src="book.imageUrl" v-bind:alt="book.title"></td>
+                            <td>{{ book.isbn }}</td>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.fullName }}</td>
+                            <td>{{ book.publisher }}</td>
+                            <td>{{ book.publishYear }}</td>
+                            <td>{{ book.descr }}</td>
+                            <td>{{ book.copies }}</td>
+                            <td>{{ book.loanCopies }}</td>
+                            <td>
+                                <button @click="updateModal(book.id, book.title, book.isbn, book.author, book.fullName, book.publisher, book.publishYear, book.category, book.copies, book.loanCopies, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light green lighten-1 hoverable">
+                                    <i class="material-icons prefix">edit</i>
+                                </button>
+                            </td>
+                            <td>
+                                <button @click="deleteModal(book.id, book.title, book.isbn, book.author, book.fullName, book.publisher, book.publishYear, book.category, book.descr, book.imageUrl)" class="btn-floating waves-effect waves-light red lighten-1 hoverable">
+                                    <i class="material-icons prefix">delete</i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <ul class="pagination">
                 <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
@@ -307,6 +313,7 @@ const selImageUrl = ref(null);
 const booksList = ref([]);
 const categoriesList = ref([]);
 const authorsList = ref([]);
+const searchText = ref('');
 const currentPage = ref(1);
 const rowsPerPage = 3;
 const booksListPagination = computed(() => {
@@ -387,6 +394,10 @@ async function initMaterialize() {
     M.FormSelect.init(selectElems);
     const parallaxElems = document.querySelectorAll('.parallax');
     M.Parallax.init(parallaxElems);
+}
+function initMaterialBoxed() {
+    var materialboxed = document.querySelectorAll('.materialboxed');
+    M.Materialbox.init(materialboxed);
 }
 function reInitSelect() {
     const selectElems = document.querySelectorAll('select');
@@ -551,6 +562,28 @@ async function confirmDelete(){
         M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
     });
 }
+function performSearch(){
+    if (searchText.value.length == 0){
+        fetchBooks();
+    }else{
+        // Se realiza la busqueda con una petición
+        axios.get(`${process.env.VUE_APP_API_URL}/books/findByTitle/${searchText.value}`, {
+            headers: {
+                token: localStorage.getItem('token')
+            }
+        })
+        .then(res => {
+            currentPage.value = 1;
+            booksList.value = res.data;
+        })
+        .catch(error => {
+            if (error.response.data)
+                M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+            else
+                M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+        });
+    }
+}
 </script>
 
 <style scoped>
@@ -571,8 +604,12 @@ table th, table td {
 }
 .listCover {
     width: 100px;
+    height: 145px;
 }
 .parallax-container {
     height: 200px;
+}
+.tableContainer {
+    height: 650px;
 }
 </style>

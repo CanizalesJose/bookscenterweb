@@ -228,6 +228,7 @@ table th, table td {
 }
 .listCover {
     width: 100px;
+    height: 145px;
 }
 .parallax-container {
     height: 200px;

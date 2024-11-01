@@ -17,7 +17,7 @@
     </ul>    
     <div class="navbar-fixed">
         <nav class="custom-nav">
-            <div class="nav-wrapper black">
+            <div class="nav-wrapper blue darken-4">
                 <a href="/" class="brand-logo center">
                     <img src="../assets/logo.png">
                 </a>

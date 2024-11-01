@@ -240,6 +240,7 @@ table th, table td {
 }
 .listCover {
     width: 75px;
+    height: 100px;
 }
 .parallax-container {
     height: 200px;

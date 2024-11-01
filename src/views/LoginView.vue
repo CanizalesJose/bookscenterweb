@@ -2,7 +2,7 @@
     <HeaderComponent></HeaderComponent>
     <!-- Crear un contenedor alineado al centro -->
     <div class="valign-wrapper loginContainer">
-        <div class="container center-align black z-depth-4">
+        <div class="container center-align blue darken-4 z-depth-4">
 
             <!-- Generar un renglon centrado -->
             <div class="row center">
