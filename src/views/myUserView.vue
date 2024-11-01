@@ -41,7 +41,7 @@
                 <br>
                 <div class="center">
                     <p><b>Modificar datos:</b></p>
-                    <button @click="updateUserData()" class="btn-floating btn-large waves-effect waves-light black">
+                    <button data-target="confirmUpdateModal" class="btn-floating btn-large waves-effect waves-light black modal-trigger">
                         <i class="material-icons">arrow_forward</i>
                     </button>
                 </div>
@@ -88,6 +88,16 @@
             </div>
         </div>
     </div>
+    <div id="confirmUpdateModal" class="modal">
+        <div class="modal-content">
+            <h4>Confirmar Actualización</h4>
+            <p>¿Estas seguro de querer actualizar tus datos?</p>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-red btn-flat">Cancelar</a>
+            <a @click="updateUserData()" class="modal-close waves-effect waves-green btn-flat">Confirmar</a>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -126,22 +136,24 @@ onBeforeMount(async () => {
         router.push('/');
         return;
     }
+    await fetchUserLoans();
     await fetchUserData();
 });
 onMounted(async () => {
     initMaterialize();
-    fetchUserLoans();
 });
 function initMaterialize() {
     const tooltipElems = document.querySelectorAll('.tooltipped');
     M.Tooltip.init(tooltipElems);
+    const modalElems = document.querySelectorAll('.modal');
+    M.Modal.init(modalElems);
 }
 function initMaterialBoxed(){
     let elems = document.querySelectorAll('.materialboxed');
     M.Materialbox.init(elems);
 }
 function fetchUserData(){
-    axios.get(`${process.env.VUE_APP_API_URL}/users/find/me`, {
+    axios.get(`${process.env.VUE_APP_API_URL}/users/findMe`, {
         headers: {
             token: localStorage.getItem('token')
         }
@@ -174,41 +186,39 @@ function fetchUserLoans(){
     });
 }
 function updateUserData() {
-    if (confirm('Confirmar actualizar datos?')){
-        if (user.value.password && user.value.password.length == 0)
-            user.value.password = null;
-        if (!checkNumber.test(user.value.contactNumber)){
-            M.toast({html: 'El número no cumple con el formato', classes: 'red'});
-            return;
-        }
-        if (!checkEmail.test(user.value.email)){
-            M.toast({html: 'El correo no cumple con el formato', classes: 'red'});
-            return;
-        }
-
-        const data = {
-            currentPassword: user.value.currentPassword,
-            password: user.value.password,
-            contactNumber: user.value.contactNumber,
-            email: user.value.email
-        }
-        axios.patch(`${process.env.VUE_APP_API_URL}/users/updateClient`, data, {
-            headers: {
-                token: localStorage.getItem('token')
-            }
-        })
-        .then(() => {
-            M.toast({html: `Datos actualizados`, classes: 'green'});
-            user.value.password = null;
-            user.value.currentPassword = null;
-        })
-        .catch(error => {
-            if (error.response)
-                M.toast({html: `Error en petición: ${error.response.data.message}`, classes: 'yellow darken-4'});
-            else
-                M.toast({html: `Error: ${error.message}`, classes: 'red'});
-        });
+    if (user.value.password && user.value.password.length == 0)
+        user.value.password = null;
+    if (!checkNumber.test(user.value.contactNumber)){
+        M.toast({html: 'El número no cumple con el formato', classes: 'red'});
+        return;
     }
+    if (!checkEmail.test(user.value.email)){
+        M.toast({html: 'El correo no cumple con el formato', classes: 'red'});
+        return;
+    }
+
+    const data = {
+        currentPassword: user.value.currentPassword,
+        password: user.value.password,
+        contactNumber: user.value.contactNumber,
+        email: user.value.email
+    }
+    axios.patch(`${process.env.VUE_APP_API_URL}/users/updateClient`, data, {
+        headers: {
+            token: localStorage.getItem('token')
+        }
+    })
+    .then(() => {
+        M.toast({html: `Datos actualizados`, classes: 'green'});
+        user.value.password = null;
+        user.value.currentPassword = null;
+    })
+    .catch(error => {
+        if (error.response)
+            M.toast({html: `Error en petición: ${error.response.data.message}`, classes: 'yellow darken-4'});
+        else
+            M.toast({html: `Error: ${error.message}`, classes: 'red'});
+    });
 }
 </script>
 
