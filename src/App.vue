@@ -27,7 +27,7 @@ async function verifyAdmin(){
         router.push('/login');
         valid = false;
     }else{
-        await axios(`${process.env.VUE_APP_API_URL}/users/validAdmin`,{
+        await axios.get(`${process.env.VUE_APP_API_URL}/users/validAdmin`,{
             headers: {
                 token: localStorage.getItem('token')
             }
@@ -47,7 +47,46 @@ async function verifyAdmin(){
                 router.push('/login');
             }
             if (error.status == 403){
-                M.toast({html: `Privilegios insuficientes: inciar sesión con usuario administrador`, classes: 'yellow darken-4'});
+                M.toast({html: `Privilegios insuficientes: inciar sesión con usuario con privilegios`, classes: 'yellow darken-4'});
+                router.push('/')
+            }
+            valid = false;
+        });
+    }
+    return valid;
+}
+
+async function verifyWorker(){
+    let valid = false;
+    if (!localStorage.getItem('token')){
+        clearSession();
+        M.toast({html: 'Página protegida: accede con un usuario con privilegios', classes: 'yellow darken-4'});
+        router.push('/login');
+        valid = false;
+    }else{
+        await axios.get(`${process.env.VUE_APP_API_URL}/users/validWorker`, {
+            headers: {
+                token: localStorage.getItem('token')
+            }
+        })
+        .then(res => {
+            if (res.status == 200)
+                valid = true;
+            
+        })
+        .catch(error => {
+            M.toast({html: `${error}`});
+            if (error.code=='ERR_NETWORK'){
+                M.toast({html: `${error.message}: No se puede conectar a la API`, classes: 'yellow darken-4'});
+                router.push('/');
+            }
+            if (error.status == 401){
+                M.toast({html: `Sesión caducada, volver a inicar sesión`, classes: 'yellow darken-4'});
+                clearSession();
+                router.push('/login');
+            }
+            if (error.status == 403){
+                M.toast({html: `Privilegios insuficientes: inciar sesión con usuario con privilegios`, classes: 'yellow darken-4'});
                 router.push('/')
             }
             valid = false;
@@ -89,6 +128,7 @@ async function verifyUser(){
 }
 
 provide('verifyUser', verifyUser);
+provide('verifyWorker', verifyWorker);
 provide('verifyAdmin', verifyAdmin);
 </script>
 

@@ -326,7 +326,7 @@ import { onMounted, inject, ref, computed} from 'vue';
 import axios from 'axios';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 
-const verifyAdmin = inject('verifyAdmin');
+const verifyWorker = inject('verifyWorker');
 const booksNotInCatalogList = ref([]);
 const booksInCatalog = ref([]);
 const selCatalogId = ref(null);
@@ -370,7 +370,7 @@ function changePage(page){
 }
 
 onMounted(async () => {
-    if (!await verifyAdmin())
+    if (!await verifyWorker())
         return;
     initMaterialize();
     fetchNotInCatalog();
@@ -397,7 +397,7 @@ async function fetchNotInCatalog(){
     .then(async res => {
         booksNotInCatalogList.value = res.data;
     })
-    .catch( () => {
+    .catch( error => {
         if (error.response.data){
             M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'red'});
         } else{
