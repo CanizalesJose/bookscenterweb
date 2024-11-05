@@ -19,6 +19,7 @@
                 <option value="" disabled selected>Seleccionar tipo de usuario:</option>
                 <option value="admin" >Administrador</option>
                 <option value="client">Cliente</option>
+                <option value="worker">Empleado</option>
             </select>
             <br>
             <label>Número de contacto:</label>
@@ -73,6 +74,7 @@
             <select v-model="selUsertype">
                 <option value="admin">Administrador</option>
                 <option value="client">Cliente</option>
+                <option value="worker">Empleado</option>
             </select>
             
 
