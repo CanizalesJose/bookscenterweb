@@ -7,8 +7,8 @@
             <p>Al agregar un libro al catálogo los clientes podrán verlo en la tienda y pedirlo prestado. Siempre puedes volver no visible un elemento del catálogo.</p>
             <div class="center" style="width: 60%; margin-inline: auto;">
                 <div class="input-field">
-                    <textarea class="materialize-textarea" v-model="selBook.summary"/>
-                    <label>Sinopsis</label>
+                    <textarea id="newSummary" class="materialize-textarea" v-model="selBook.summary"/>
+                    <label for="newSummary">Sinopsis</label>
                 </div>
                 <div class="input-field">
                     <select>
@@ -51,10 +51,12 @@
                 <br>
                 Se debe tener en cuenta que este resumen no debe contener información vital sobre la trama del libro, para evitar descontentos con el cliente.
             </p>
-            <div style="margin-inline: auto; width: 60%;" class="input-field center">
-                <label>Sinopsis</label>
-                <br>
-                <textarea ref="textAreaRef" class="materialize-textarea" v-model="selBook.summary"/>
+            <br>
+            <div class="container">
+                <div class="input-field center">
+                    <textarea id="updateSummary" ref="textAreaRef" class="materialize-textarea" v-model="selBook.summary"/>
+                    <label for="updateSummary">Sinopsis</label>
+                </div>
             </div>
             <table class="responsive-table">
                 <thead>
@@ -513,11 +515,14 @@ function editModal(catalogId ,bookId, title, imageUrl, summary){
     selBookId.value = bookId;
     selBook.value.title = title;
     selBook.value.cover = imageUrl;
-    textAreaRef.value.value = summary;
     selBook.value.summary = summary;
     let modalInstance = M.Modal.getInstance(document.querySelector('#editModal'));
     modalInstance.open();
-    M.textareaAutoResize(textAreaRef.value);
+    setTimeout(() => {
+        M.updateTextFields();
+        let textArea = document.getElementById('updateSummary');
+        M.textareaAutoResize(textArea);
+    }, 0);
 }
 function confirmEdit(){
     // Confirmar el cambio de sinopsis
@@ -572,6 +577,9 @@ async function addToCatalogModal(bookId, cover, title, author, category){
     selVisible.value = 1;
     let modalInstance = M.Modal.getInstance(document.querySelector('#addModal'));
     modalInstance.open();
+    setTimeout(() => {
+        M.updateTextFields();
+    }, 0);
 }
 async function confirmAddToCatalog(){
     let data = {summary: selBook.value.summary, isVisible: selVisible.value};

@@ -10,10 +10,14 @@
         <div class="modal-content">
             <h4>Confirmar registro</h4>
             <div class="divider"></div>
-            <label for="newFullname">Nombre completo:</label>
-            <input v-model="newFullname" id="newFullname" autocomplete="off">
-            <label for="newNationality">Nacionalidad</label>
-            <input v-model="newNationality" id="newNationality" autocomplete="off">
+            <div class="input-field">
+                <input type="text" v-model="newFullname" id="newFullname" autocomplete="off">
+                <label for="newFullname">Nombre completo:</label>
+            </div>
+            <div class="input-field">
+                <input type="text" v-model="newNationality" id="newNationality" autocomplete="off">
+                <label for="newNationality">Nacionalidad</label>
+            </div>
             <p>¿Estás seguro de querer crear esta categoría?</p>
             <table class="responsive-table">
                 <thead>
@@ -41,10 +45,14 @@
         <div class="modal-content">
             <h4>Confirmar actualización</h4>
             <div class="divider"></div>
-            <label>Nombre completo</label>
-            <input v-model="newFullname" autocomplete="off">
-            <label>Nacionalidad</label>
-            <input v-model="newNationality" autocomplete="off">
+            <div class="input-field">
+                <input type="text" v-model="newFullname" id="updatedFullName" autocomplete="off">
+                <label for="updatedFullName">Nombre completo</label>
+            </div>
+            <div class="input-field">
+                <input type="text" v-model="newNationality" id="updatedNationality" autocomplete="off">
+                <label for="updatedNationality">Nacionalidad</label>
+            </div>
 
             <p>¿Estás seguro de querer actualizar este registro?</p>
             <br>
@@ -262,6 +270,9 @@ async function registerModal(fullname, nationality){
     newNationality.value = nationality;
     const registerModal = M.Modal.getInstance(document.querySelector('#registerModal'));
     registerModal.open();
+    setTimeout(() => {
+        M.updateTextFields();
+    }, 0);
 }
 async function confirmRegister(){
     if (!checkData())
@@ -293,6 +304,9 @@ async function updateModal(id, fullname, nationality) {
     newNationality.value = nationality;    
     const updateModal = M.Modal.getInstance(document.querySelector('#updateModal'));
     updateModal.open();
+    setTimeout(() => {
+        M.updateTextFields();
+    }, 0);
 }
 async function confirmUpdate() {
     if (!checkData())

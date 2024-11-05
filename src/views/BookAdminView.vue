@@ -11,36 +11,50 @@
             <h4>Confirmar registro</h4>
             <div class="divider"></div>
             <!-- Nuevos datos -->
-            <label>Portada</label>
-            <input v-model="selImageUrl" autocomplete="off">
-            <label>Titulo:</label>
-            <input v-model="selTitle" autocomplete="off">
-            <label>ISBN</label>
-            <input v-model="selIsbn" autocomplete="off">
+            <div class="input-field">
+                <input id="newImageURL" type="text" v-model="selImageUrl" autocomplete="off">
+                <label for="newImageURL">Portada</label>
+            </div>
+            <div class="input-field">
+                <input id="newTitle" type="text" v-model="selTitle" autocomplete="off">
+                <label for="newTitle">Titulo</label>
+            </div>
+            <div class="input-field">
+                <input id="newISBN" type="text" v-model="selIsbn" autocomplete="off">
+                <label for="newISBN">ISBN</label>
+            </div>
             <!-- Author selector -->
-            <br>
-            <label>Autor</label>
-            <select v-model="selAuthor" @change="updateAuthorSelection">
-                <option v-for="author in authorsList" :key="author.id" :value="JSON.stringify({id: author.id, fullName: author.fullName})">
-                    {{ author.fullName }}
-                </option>
-            </select>
-            <br>
-            <label>Editor</label>
-            <input v-model="selPublisher" autocomplete="off">
-            <label>Año de publicación</label>
-            <input v-model="selPublishYear" type="number" autocomplete="off">
+            <div class="input-field">
+                <select v-model="selAuthor" @change="updateAuthorSelection">
+                    <option value="" disabled>Seleccionar un autor</option>
+                    <option v-for="author in authorsList" :key="author.id" :value="JSON.stringify({id: author.id, fullName: author.fullName})">
+                        {{ author.fullName }}
+                    </option>
+                </select>
+                <label>Autor</label>
+            </div>
+            <div class="input-field">
+                <input id="newPublisher" type="text" v-model="selPublisher" autocomplete="off">
+                <label for="newPublisher">Editor</label>
+            </div>
+            <div class="input-field">
+                <input id="newYear" v-model="selPublishYear" type="number" autocomplete="off">
+                <label for="newYear">Año de publicación</label>
+            </div>
             <!-- Category selector -->
-             <br>
-             <label>Categoría</label>
-             <select v-model="selCategory" @change="updateCategorySelection">
-                <option v-for="category in categoriesList" :key="category.id" :value="JSON.stringify({id: category.id, descr: category.descr})">
-                    {{ category.descr }}
-                </option>
-             </select>
-            <br>
-            <label>Copias:</label>
-            <input type="number" autocomplete="off" v-model="selCopies">
+            <div class="input-field">
+                <select v-model="selCategory" @change="updateCategorySelection">
+                    <option value="" disabled>Seleccionar una categoría</option>
+                    <option v-for="category in categoriesList" :key="category.id" :value="JSON.stringify({id: category.id, descr: category.descr})">
+                        {{ category.descr }}
+                    </option>
+                </select>
+                <label>Categoría</label>
+            </div>
+            <div class="input-field">
+                <input id="newCopies" type="number" autocomplete="off" v-model="selCopies">
+                <label for="newCopies">Copias:</label>
+            </div>
 
             <p>¿Estás seguro de querer crear este libro?</p>
             <table class="responsive-table">
@@ -86,43 +100,54 @@
             <h4>Confirmar actualización</h4>
             <div class="divider"></div>
             <!-- Ingresar nuevos datos -->
-            <label>Portada</label>
-            <input v-model="selImageUrl" autocomplete="off">
-            <label>Titulo:</label>
-            <input v-model="selTitle" autocomplete="off">
-            <label>ISBN</label>
-            <input v-model="selIsbn" autocomplete="off">
+            <div class="input-field">
+                <input id="updateImageURL" type="text" v-model="selImageUrl" autocomplete="off">
+                <label for="updateImageURL">Portada</label>
+            </div>
+            <div class="input-field">
+                <input id="updateTitle" type="text" v-model="selTitle" autocomplete="off">
+                <label for="updateTitle">Titulo:</label>
+            </div>
+            <div class="input-field">
+                <input id="updateIsbn" type="text" v-model="selIsbn" autocomplete="off">
+                <label for="updateIsbn">ISBN</label>
+            </div>
             <!-- Author selector -->
-            <br>
-            <label>Autor</label>
-            <select v-model="selAuthor" @change="updateAuthorSelection">
-                <option :value="selAuthor" selected disabled>
-                    {{ selFullname }}
-                </option>
-                <option v-for="author in authorsList" :key="author.id" :value="JSON.stringify({id: author.id, fullName: author.fullName})">
-                    {{ author.fullName }}
-                </option>
-            </select>
-            <br>
-            <label>Editor</label>
-            <input v-model="selPublisher" autocomplete="off">
-            <label>Año de publicación</label>
-            <input v-model="selPublishYear" type="number" autocomplete="off">
+            <div class="input-field">
+                <select v-model="selAuthor" @change="updateAuthorSelection">
+                    <option :value="selAuthor" selected disabled>
+                        {{ selFullname }}
+                    </option>
+                    <option v-for="author in authorsList" :key="author.id" :value="JSON.stringify({id: author.id, fullName: author.fullName})">
+                        {{ author.fullName }}
+                    </option>
+                </select>
+                <label>Autor</label>
+            </div>
+            <div class="input-field">
+                <input id="updatePublisher" type="text" v-model="selPublisher" autocomplete="off">
+                <label for="updatePublisher">Editor</label>
+            </div>
+            <div class="input-field">
+                <input id="updateYear" v-model="selPublishYear" type="number" autocomplete="off">
+                <label for="updateYear">Año de publicación</label>
+            </div>
             <!-- Category selector -->
-            <br>
-            <label>Categoría</label>
-            <select v-model="selCategory" @change="updateCategorySelection">
-                <option :value="selCategory" selected disabled>
-                    {{ selDescr }}
-                </option>
-                <option v-for="category in categoriesList" :key="category.id" :value="JSON.stringify({id: category.id, descr: category.descr})">
-                    {{ category.descr }}
-                </option>
-            </select>
-            <br>
-            <label>Copias en inventario:</label>
-            <input v-model="selCopies" type="number" autocomplete="off">
-            
+            <div class="input-field">
+                <select v-model="selCategory" @change="updateCategorySelection">
+                    <option :value="selCategory" selected disabled>
+                        {{ selDescr }}
+                    </option>
+                    <option v-for="category in categoriesList" :key="category.id" :value="JSON.stringify({id: category.id, descr: category.descr})">
+                        {{ category.descr }}
+                    </option>
+                </select>
+                <label>Categoría</label>
+            </div>
+            <div class="input-field">
+                <input id="updateCopies" v-model="selCopies" type="number" autocomplete="off">
+                <label for="updateCopies">Copias en inventario:</label>
+            </div>
 
             <p>¿Estás seguro de querer actualizar este registro?</p>
             <br>
@@ -420,9 +445,9 @@ async function registerModal(){
     selAuthor.value = null;
     selFullname.value = null;
     selPublisher.value = null;
-    selPublishYear.value = null;
+    selPublishYear.value = new Date().getFullYear();
     selCategory.value = null;
-    selCopies.value = null;
+    selCopies.value = 1;
     selLoanCopies.value = null;
     selDescr.value = null;
     selImageUrl.value = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT58P55blSKZmf2_LdBoU7jETl6OiB2sjYy9A&s';
@@ -432,6 +457,7 @@ async function registerModal(){
     await fetchAuthors();
     setTimeout(() => {
         reInitSelect();
+        M.updateTextFields();
     }, 0);
 }
 async function confirmRegister(){
@@ -508,6 +534,7 @@ async function updateModal(id, title, isbn, author, fullname, publisher, publish
     await fetchCategories();
     setTimeout(() => {
         reInitSelect();
+        M.updateTextFields();
     }, 0);
 }
 async function confirmUpdate(){
@@ -547,6 +574,9 @@ async function deleteModal(id, title, isbn, author, fullname, publisher, publish
     selImageUrl.value = imageUrl;
     const deleteModal = M.Modal.getInstance(document.querySelector('#deleteModal'));
     deleteModal.open();
+    setTimeout(() => {
+        M.updateTextFields();
+    }, 0);
 }
 async function confirmDelete(){
     await axios.delete(`${process.env.VUE_APP_API_URL}/books/delete/${selId.value}`, {

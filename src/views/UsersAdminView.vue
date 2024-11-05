@@ -11,21 +11,31 @@
             <h4>Confirmar registro</h4>
             <div class="divider"></div>
             <!-- Nuevos datos -->
-            <label for="newUsername">Nombre de usuario:</label>
-            <input v-model="selUsername" id="newUsername" autocomplete="off">
-            <label for="newPassword">Contraseña:</label>
-            <input type="password" v-model="selPassword" id="newPassword" autocomplete="off">
-            <select v-model="selUsertype">
-                <option value="" disabled selected>Seleccionar tipo de usuario:</option>
-                <option value="admin" >Administrador</option>
-                <option value="client">Cliente</option>
-                <option value="worker">Empleado</option>
-            </select>
-            <br>
-            <label>Número de contacto:</label>
-            <input v-model="selContactNumber" autocomplete="off">
-            <label>Email</label>
-            <input v-model="selEmail" autocomplete="off">
+            <div class="input-field">
+                <input v-model="selUsername" type="text" id="newUsername" autocomplete="off">
+                <label for="newUsername">Nombre de usuario:</label>
+            </div>
+            <div class="input-field">
+                <input type="password" v-model="selPassword" id="newPassword" autocomplete="off">
+                <label for="newPassword">Contraseña:</label>
+            </div>
+            <div class="input-field">
+                <select v-model="selUsertype" id="newUsertype">
+                    <option value="" disabled selected>Seleccionar tipo de usuario:</option>
+                    <option value="admin" >Administrador</option>
+                    <option value="client">Cliente</option>
+                    <option value="worker">Empleado</option>
+                </select>
+                <label for="newUsertype">Tipo de usuario:</label>
+            </div>
+            <div class="input-field">
+                <input type="text" v-model="selContactNumber" id="newContactNumber" autocomplete="off">
+                <label for="newContactNumber">Número de contacto:</label>
+            </div>
+            <div class="input-field">
+                <input type="email" v-model="selEmail" id="newEmail" autocomplete="off">
+                <label  for="newEmail">Email</label>
+            </div>
             
 
             <p>¿Estás seguro de querer crear este nuevo usuario?</p>
@@ -64,18 +74,26 @@
             <h4>Confirmar actualización</h4>
             <div class="divider"></div>
             <!-- Nuevos datos -->
-            <label>Nuevo numero de contacto</label>
-            <input v-model="selContactNumber" autocomplete="off">
-            <label>Nuevo correo electronico</label>
-            <input v-model="selEmail" autocomplete="off">
-            <label>Nueva contraseña</label>
-            <input class="tooltipped" type="password" data-position="left" data-tooltip="Dejar vacío para no cambiar" v-model="selPassword" autocomplete="off">
-            <label>Nuevo tipo de usuario:</label>
-            <select v-model="selUsertype">
-                <option value="admin">Administrador</option>
-                <option value="client">Cliente</option>
-                <option value="worker">Empleado</option>
-            </select>
+            <div class="input-field">
+                <input id="changedNumber" type="text" v-model="selContactNumber" autocomplete="off">
+                <label for="changedNumber">Nuevo numero de contacto</label>
+            </div>
+            <div class="input-field">
+                <input id="changedEmail" type="email" v-model="selEmail" autocomplete="off">
+                <label for="changedEmail">Nuevo correo electronico</label>
+            </div>
+            <div class="input-field">
+                <input id="changedPassword" class="tooltipped" type="password" data-position="left" data-tooltip="Dejar vacío para no cambiar" v-model="selPassword" autocomplete="off">
+                <label for="changedPassword">Nueva contraseña</label>
+            </div>
+            <div class="input-field">
+                <select id="changedType" v-model="selUsertype">
+                    <option value="admin">Administrador</option>
+                    <option value="client">Cliente</option>
+                    <option value="worker">Empleado</option>
+                </select>
+                <label for="changedType">Nuevo tipo de usuario:</label>
+            </div>
             
 
             <p>¿Estás seguro de querer actualizar este registro?</p>
@@ -335,6 +353,7 @@ async function updateModal(username, password, usertype, contactNumber, email) {
     updateModal.open();
     setTimeout(() => {
         reInitSelect();
+        M.updateTextFields();
     }, 0);
 }
 async function confirmUpdate(){
@@ -395,6 +414,7 @@ async function registerModal(username, password, usertype, contactNumber, email)
     registerModal.open();
     setTimeout(() => {
         reInitSelect();
+        M.updateTextFields();
     }, 0);
 }
 async function confirmRegister(){

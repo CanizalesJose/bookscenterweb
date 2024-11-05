@@ -86,8 +86,10 @@
         <div class="modal-content">
             <h4>Confirmar actualización</h4>
             <div class="divider"></div>
-            <label for="newDescr1">Nueva descripción:</label>
-            <input v-model="selectedDscr" id="newDescr1" autocomplete="off">
+            <div class="input-field">
+                <input type="text" v-model="selectedDscr" id="newDescr1" autocomplete="off">
+                <label for="newDescr1">Nueva descripción:</label>
+            </div>
             <p>¿Estás seguro de querer actualizar con estos datos?</p>
             <p>El nuevo registro quedará de la siguiente manera:</p>
             <table>
@@ -146,8 +148,10 @@
         <div class="modal-content">
             <h4>Confirmar registro</h4>
             <div class="divider"></div>
-            <label for="newDescr2">Nueva descripción o nombre:</label>
-            <input v-model="newDescr" id="newDescr2" autocomplete="off">
+            <div class="input-field">
+                <input type="text" v-model="newDescr" id="newDescr2" autocomplete="off">
+                <label for="newDescr2">Nueva descripción o nombre:</label>
+            </div>
             <p>¿Estás seguro de querer crear esta categoría?</p>
             <table>
                 <thead>
@@ -212,6 +216,7 @@ async function initModals() {
     const parallaxElems = document.querySelectorAll('.parallax');
     M.Parallax.init(parallaxElems);
 }
+
 function checkData(descr){
     let pass = true;
     if (!descr){
@@ -229,6 +234,9 @@ async function updateModal(id, descr) {
     selectedDscr.value = descr;
     const updateModal = M.Modal.getInstance(document.querySelector('#updateModal'));
     updateModal.open();
+    setTimeout(() => {
+        M.updateTextFields();
+    }, 0);
 }
 async function deleteModal(id, descr) {
     selectedId.value = id;
