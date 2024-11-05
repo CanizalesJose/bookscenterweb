@@ -1,18 +1,18 @@
 <template>
     <ul id="adminMenu1" class="dropdown-content">
-        <li><a class="black-text" href="/adminCategories">Categorias</a></li>
-        <li><a class="black-text" href="/adminAuthors">Autores</a></li>
-        <li><a class="black-text" href="/adminBooks">Libros</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminCategories">Categorias</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminAuthors">Autores</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminBooks">Libros</a></li>
         <li><a class="black-text" href="/adminLoans">Prestamos</a></li>
-        <li><a class="black-text" href="/adminUsers">Usuarios</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminUsers">Usuarios</a></li>
         <li><a class="black-text" href="/adminCatalog">Catálogo</a></li>
     </ul>
     <ul id="adminMenu2" class="dropdown-content">
-        <li><a class="black-text" href="/adminCategories">Categorias</a></li>
-        <li><a class="black-text" href="/adminAuthors">Autores</a></li>
-        <li><a class="black-text" href="/adminBooks">Libros</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminCategories">Categorias</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminAuthors">Autores</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminBooks">Libros</a></li>
         <li><a class="black-text" href="/adminLoans">Prestamos</a></li>
-        <li><a class="black-text" href="/adminUsers">Usuarios</a></li>
+        <li v-if="usertype=='admin'"><a class="black-text" href="/adminUsers">Usuarios</a></li>
         <li><a class="black-text" href="/adminCatalog">Catálogo</a></li>
     </ul>    
     <div class="navbar-fixed">
@@ -29,7 +29,7 @@
                     <li class="hoverable"><a href="/">Inicio</a></li>
                     <li class="hoverable"><a href="/catalog">Catálogo</a></li>
                     <li class="hoverable"><a href="/about">Acerca de...</a></li>
-                    <li v-if="usertype=='admin'" class="hoverable">
+                    <li v-if="usertype=='admin' || usertype=='worker'" class="hoverable">
                         <a class="dropdown-trigger" data-target="adminMenu1">
                             Administración<i class="material-icons right">arrow_drop_down</i>
                         </a>
@@ -53,7 +53,7 @@
         <li><a href="/">Inicio</a></li>
         <li><a href="/catalog">Catálogo</a></li>
         <li><a href="/about">Acerca de...</a></li>
-        <li v-if="usertype=='admin'" class="hoverable">
+        <li v-if="usertype=='admin' || usertype=='worker'" class="hoverable">
             <a class="dropdown-trigger" data-target="adminMenu2">
                 Administración<i class="material-icons right">arrow_drop_down</i>
             </a>

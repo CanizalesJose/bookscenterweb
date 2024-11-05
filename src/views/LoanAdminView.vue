@@ -211,7 +211,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
 import axios from 'axios';
 import { inject, onMounted, ref, computed } from 'vue';
 /* eslint-disable */
-const verifyAdmin = inject('verifyAdmin');
+const verifyWorker = inject('verifyWorker');
 const pendingLoans = ref([]);
 const returnedLoans = ref([]);
 const selBook = ref({
@@ -260,7 +260,7 @@ function changeReturnedPage(page){
 }
 
 onMounted(async () => {
-    if (!await verifyAdmin())
+    if (!await verifyWorker())
         return;
     await fetchPending();
     await fetchReturned();
