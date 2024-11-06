@@ -51,29 +51,31 @@
                     <img style="width: 200px;" src="../assets/img/sinPrestamosUsuario.jpg">
                     <h6>Sin registro de libros prestados</h6>
                 </div>
-                <table v-if="loansList.length > 0" class="centered">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Entrega</th>
-                            <th>Portada</th>
-                            <th>Titulo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="loan in loansListPagination" :key="loan.loanId">
-                            <td>
-                                <i v-if="!loan.returned" class="material-icons">alarm</i>
-                                <i v-if="loan.returned" class="material-icons">check</i>
-                            </td>
-                            <td>{{ loan.returnDate }}</td>
-                            <td>
-                                <img :src="loan.cover" class="listCover materialboxed" @load="initMaterialBoxed()">
-                            </td>
-                            <td>{{ loan.title }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="tableContainer">
+                    <table v-if="loansList.length > 0" class="centered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Entrega</th>
+                                <th>Portada</th>
+                                <th>Titulo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="loan in loansListPagination" :key="loan.loanId">
+                                <td>
+                                    <i v-if="!loan.returned" class="material-icons">alarm</i>
+                                    <i v-if="loan.returned" class="material-icons">check</i>
+                                </td>
+                                <td>{{ loan.returnDate }}</td>
+                                <td>
+                                    <img :src="loan.cover" class="listCover materialboxed" @load="initMaterialBoxed()">
+                                </td>
+                                <td>{{ loan.title }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <ul v-if="loansList.length > 0" class="pagination">
                     <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
                         <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
@@ -244,5 +246,8 @@ table th, table td {
 }
 .parallax-container {
     height: 200px;
+}
+.tableContainer {
+    height: 450px;
 }
 </style>
