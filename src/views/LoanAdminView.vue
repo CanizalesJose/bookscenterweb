@@ -27,11 +27,6 @@
             <div class="section center">
                 <h3>Prestamos pendientes</h3>
             </div>
-            <!-- Si no hay prestamos pendientes -->
-            <div v-if="pendingLoans.length == 0" class="container center">
-                <img style="width: 300px;" src="../assets/img/todo-bien.png">
-                <h5>No hay prestamos pendientes</h5>
-            </div>
             <!-- Tabla de prestamos pendientes -->
             <div class="input-field">
                     <i class="material-icons prefix">search</i>
@@ -39,7 +34,12 @@
                     <label for="search">Buscar</label>
                 </div>
             <div class="pendingTableContainer">
-                <table class="responsive-table">
+                <!-- Si no hay prestamos pendientes -->
+                <div v-if="pendingLoans.length == 0" class="container center">
+                    <img style="width: 300px;" src="../assets/img/todo-bien.png">
+                    <h5>No hay prestamos pendientes</h5>
+                </div>
+                <table v-if="pendingLoans.length != 0" class="responsive-table">
                     <thead>
                         <tr>
                             <th><!-- Portada --></th>
@@ -107,7 +107,12 @@
                     <label for="search2">Buscar</label>
                 </div>
             <div class="returnedTableContainer">
-                <table class="responsive-table">
+                <!-- Si no hay registro -->
+                <div v-if="returnedLoans.length == 0" class="container center">
+                    <img style="width: 300px;" src="../assets/img/todo-bien.png">
+                    <h5>No hay registro por mostrar</h5>
+                </div>
+                <table v-if="returnedLoans.length != 0" class="responsive-table">
                     <thead>
                         <tr>
                             <th><!-- Portada --></th>
@@ -149,11 +154,6 @@
                 </li>
             </ul>
         </div>
-    </div>
-    <!-- Si no hay registro -->
-    <div v-if="returnedLoans.length == 0" class="container center">
-        <img style="width: 300px;" src="../assets/img/todo-bien.png">
-        <h5>No hay registro por mostrar</h5>
     </div>
 
     <div id="changeStatusModal" class="modal modalContainer">
@@ -308,10 +308,44 @@ async function fetchReturned() {
     returnedCurrentPage.value = 1;
 }
 function performPendingSearch(){
-
+ if (pendingSearchText.value.length == 0){
+    fetchPending();
+ }else {
+    // Realizar busqueda
+    pendingLoans.value = [];
+    axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchPending/${pendingSearchText.value}`, {
+            headers: {
+                token: localStorage.getItem('token')
+            }
+        })
+        .then(res => {
+            pendingLoans.value = res.data;
+        })
+        .catch(error => {
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+        });
+        pendingCurrentPage.value = 1;
+ }
 }
 function performReturnedSearch(){
-    
+    if (returnedLoans.value.length == 0){
+        fetchReturned();
+    } else {
+        // Realizar busqueda
+        returnedLoans.value = [];
+        axios.get(`${process.env.VUE_APP_API_URL}/loans/fetchReturned/${returnedSearchText.value}`, {
+            headers: {
+                token: localStorage.getItem('token')
+            }
+        })
+        .then(res => {
+            returnedLoans.value = res.data;
+        })
+        .catch(error => {
+            M.toast({html: `Error en la solicitud: ${error.message}`, classes: 'yellow darken-4'});
+        });
+        returnedCurrentPage.value = 1;
+    }
 }
 function selectBook(loanId, bookId, username, contactNumber, email, date, returnDate, title, author, cover, pending, isbn){
     selBook.value.loanId = loanId;
