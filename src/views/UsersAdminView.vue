@@ -23,7 +23,6 @@
                 <button v-if="randomPassword == null" class="btn-flat" @click="generatePassword()">
                     Generar contraseña segura <i class="material-icons right">send</i>
                 </button>
-                <p>{{ randomPassword }}</p>
             </div>
             <div class="input-field">
                 <select v-model="selUsertype" id="newUsertype">
@@ -96,8 +95,6 @@
                 <button v-if="randomPassword == null" class="btn-flat" @click="generatePassword()">
                     Generar contraseña segura <i class="material-icons right">send</i>
                 </button>
-                <p>{{ randomPassword }}</p>
-                <br>
             </div>
             <div class="input-field">
                 <select id="changedType" v-model="selUsertype">
@@ -107,8 +104,6 @@
                 </select>
                 <label for="changedType">Nuevo tipo de usuario:</label>
             </div>
-            
-
             <p>¿Estás seguro de querer actualizar este registro?</p>
             <br>
             <p>El nuevo registro quedará de la siguiente manera:</p>
@@ -474,6 +469,12 @@ function generatePassword(){
     })
     .then(res => {
         randomPassword.value = res.data.random_password;
+        selPassword.value = randomPassword.value;
+        navigator.clipboard.writeText(randomPassword.value);
+        setTimeout(() => {
+            M.updateTextFields();
+        }, 0);
+        M.toast({html: `Contraseña generada copiada!`, classes: 'green'})
     })
     .catch(error => {
         M.toast({html: error.message});
