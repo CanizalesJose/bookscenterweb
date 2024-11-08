@@ -20,6 +20,12 @@
                 <label for="newPassword">Contraseña:</label>
             </div>
             <div class="input-field">
+                <button v-if="randomPassword == null" class="btn-flat" @click="generatePassword()">
+                    Generar contraseña segura <i class="material-icons right">send</i>
+                </button>
+                <p>{{ randomPassword }}</p>
+            </div>
+            <div class="input-field">
                 <select v-model="selUsertype" id="newUsertype">
                     <option value="" disabled selected>Seleccionar tipo de usuario:</option>
                     <option value="admin" >Administrador</option>
@@ -85,6 +91,13 @@
             <div class="input-field">
                 <input id="changedPassword" class="tooltipped" type="password" data-position="left" data-tooltip="Dejar vacío para no cambiar" v-model="selPassword" autocomplete="off">
                 <label for="changedPassword">Nueva contraseña</label>
+            </div>
+            <div class="input-field">
+                <button v-if="randomPassword == null" class="btn-flat" @click="generatePassword()">
+                    Generar contraseña segura <i class="material-icons right">send</i>
+                </button>
+                <p>{{ randomPassword }}</p>
+                <br>
             </div>
             <div class="input-field">
                 <select id="changedType" v-model="selUsertype">
@@ -249,6 +262,7 @@ const selPassword = ref(null);
 const selUsertype = ref(null);
 const selContactNumber = ref(null);
 const selEmail = ref(null);
+const randomPassword = ref(null);
 const checkEmail = /^[a-zA-Z0-9]+\@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
 const checkNumber = /^[0-9]{10}|[0-9]{3}-[0-9]{3}-[0-9]{4}$/
 
@@ -344,6 +358,7 @@ function checkData(){
     return pass;
 }
 async function updateModal(username, password, usertype, contactNumber, email) {
+    randomPassword.value = null;
     selUsername.value = username;
     selPassword.value = password;
     selUsertype.value = usertype;
@@ -405,6 +420,7 @@ async function confirmDelete(){
     });
 }
 async function registerModal(username, password, usertype, contactNumber, email){
+    randomPassword.value = null;
     selUsername.value = username;
     selPassword.value = password;
     selUsertype.value = usertype;
@@ -448,6 +464,19 @@ async function confirmRegister(){
     })
     .catch(error => {
         M.toast({html: `Error en la solicitud: ${error.response.data.message}`, classes: 'yellow darken-4'});
+    });
+}
+function generatePassword(){
+    axios.get("https://api.api-ninjas.com/v1/passwordgenerator?length=30&exclude_special_chars=true", {
+        headers: {
+            'X-Api-Key': process.env.VUE_APP_PASSWORDS_API
+        }
+    })
+    .then(res => {
+        randomPassword.value = res.data.random_password;
+    })
+    .catch(error => {
+        M.toast({html: error.message});
     });
 }
 </script>
