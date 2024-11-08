@@ -122,6 +122,7 @@
                             <th>Autor</th>
                             <th>Estado</th>
                             <th>Usuario</th>
+                            <th>Ver</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,6 +139,11 @@
                                 <i v-if="loan.returned == 0" class="material-icons">alarm</i>
                             </td>
                             <td>{{ loan.username }}</td>
+                            <td>
+                                <button @click="selectBook(loan.loanId, loan.bookId, loan.username, loan.contactNumber, loan.email, loan.date, loan.returnDate, loan.title, loan.author, loan.cover, loan.pending, loan.isbn)" class="btn-floating black modal-trigger" data-target="detailsModal">
+                                    <i class="material-icons">search</i>
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -200,6 +206,52 @@
             <div class="divider"></div>
             <a class="modal-close waves-effect waves-red btn-flat">Cancelar</a>
             <a @click="confirmChangeStatus" class="waves-effect waves-light btn-flat">Confirmar Entrega</a>
+        </div>
+    </div>
+
+    <div id="detailsModal" class="modal modalContainer">
+        <div class="modal-content">
+            <h4>Detalles del pedido</h4>
+            <div class="divider"></div>
+            <br>
+            <div class="row">
+                <p><b>Id del Prestamo</b> - {{ selBook.loanId }}</p>
+            </div>
+            <div class="row">
+                <div class="col s6 left-align">
+                    <p><b>Fecha del prestamo</b> - {{ selBook.date }}</p>
+                    <p><b>Pedido por</b> - {{ selBook.username }}</p>
+                    <p><b>Correo:</b> {{ selBook.email }}</p>
+                </div>
+                <div class="col s6 right-align">
+                    <p>{{ selBook.returnDate }} - <b>Fecha de entrega</b></p>
+                    <p>{{ selBook.contactNumber }} - <b>Número</b></p>
+                </div>
+            </div>
+            <table class="highlight responsive-table">
+                <thead>
+                    <tr>
+                        <th>Portada</th>
+                        <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>ISBN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img :src="selBook.cover" class="listCover materialboxed">
+                        </td>
+                        <td>{{ selBook.title }}</td>
+                        <td>{{ selBook.author }}</td>
+                        <td>{{ selBook.isbn }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <div class="divider"></div>
+            <a class="modal-close waves-effect btn-flat">Cerrar</a>
         </div>
     </div>
 </template>
