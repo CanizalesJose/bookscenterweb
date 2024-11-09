@@ -36,9 +36,15 @@
                     <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
                     <label for="search">Buscar</label>
                 </div>
-                <!-- Construir tabla con datos de categorias -->
                 <div class="tableContainer">
-                    <table class="highlight responsive-table">
+                    <!-- Si no hay registros -->
+                    <div v-if="categories.length == 0" class="container center">
+                        <h6>No hay resultados</h6>
+                        <br>
+                        <img style="width: 200px;" src="../assets/img/notFound.jpg">
+                    </div>
+                    <!-- Construir tabla con datos de categorias -->
+                    <table v-if="categories.length > 0" class="highlight responsive-table">
                         <thead>
                             <tr>
                                 <th>Id</th>

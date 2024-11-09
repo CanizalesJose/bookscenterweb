@@ -250,14 +250,19 @@
             <div class="section center">
                 <h3>Gestión de Libros</h3>
             </div>
-            <!-- Construir tabla con datos de libros -->
+            <div class="input-field">
+                <i class="material-icons prefix">search</i>
+                <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
+                <label for="search">Buscar</label>
+            </div>
             <div class="tableContainer">
-                <div class="input-field">
-                    <i class="material-icons prefix">search</i>
-                    <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
-                    <label for="search">Buscar</label>
+                <div v-if="booksList.length == 0" class="container center">
+                    <h6>No hay resultados</h6>
+                    <br>
+                    <img style="width: 200px;" src="../assets/img/notFound.jpg">
                 </div>
-                <table class="highlight responsive-table">
+                <!-- Construir tabla con datos de libros -->
+                <table v-if="booksList.length > 0" class="highlight responsive-table">
                     <thead>
                         <tr>
                             <th>Portada</th>
@@ -640,6 +645,6 @@ table th, table td {
     height: 200px;
 }
 .tableContainer {
-    height: 650px;
+    height: 570px;
 }
 </style>

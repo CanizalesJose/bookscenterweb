@@ -178,14 +178,19 @@
                 </div>
             </div>
             <div class="col s12 m12">
-                <div class="section center">
+                <div class="section">
+                    <div class="input-field">
+                        <i class="material-icons prefix">search</i>
+                        <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchTextInCatalog" @keyup.enter="performSearchInCatalog()">
+                        <label for="search">Buscar</label>
+                    </div>
                     <div class="tableContainerInCatalog">
-                        <div class="input-field">
-                            <i class="material-icons prefix">search</i>
-                            <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchTextInCatalog" @keyup.enter="performSearchInCatalog()">
-                            <label for="search">Buscar</label>
+                        <div v-if="booksInCatalog.length == 0" class="container center">
+                            <h6>No hay resultados</h6>
+                            <br>
+                            <img style="width: 200px;" src="../assets/img/notFound.jpg">
                         </div>
-                        <table class="highlight responsive-table">
+                        <table v-if="booksInCatalog.length > 0" class="highlight responsive-table">
                             <thead>
                                 <tr>
                                     <th>Portada</th>
@@ -265,14 +270,19 @@
                 </div>
             </div>
             <div class="col s12 m12">
-                <div class="section center">
+                <div class="section">
+                    <div class="input-field">
+                        <i class="material-icons prefix">search</i>
+                        <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search2" v-model="searchTextOffCatalog" @keyup.enter="performSearchOffCatalog()">
+                        <label for="search2">Buscar</label>
+                    </div>
                     <div class="tableContainerOffCatalog">
-                        <div class="input-field">
-                            <i class="material-icons prefix">search</i>
-                            <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search2" v-model="searchTextOffCatalog" @keyup.enter="performSearchOffCatalog()">
-                            <label for="search2">Buscar</label>
+                        <div v-if="booksNotInCatalogList.length == 0" class="container center">
+                            <h6>No hay resultados</h6>
+                            <br>
+                            <img style="width: 200px;" src="../assets/img/notFound.jpg">
                         </div>
-                        <table class="highlight responsive-table">
+                        <table v-if="booksNotInCatalogList.length > 0" class="highlight responsive-table">
                             <thead>
                                 <tr>
                                     <th>Portada</th>
@@ -623,9 +633,9 @@ table th, table td {
     height: 200px;
 }
 .tableContainerInCatalog {
-    height: 750px;
+    height: 670px;
 }
 .tableContainerOffCatalog {
-    height: 650px;
+    height: 550px;
 }
 </style>

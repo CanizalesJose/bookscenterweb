@@ -36,8 +36,9 @@
             <div class="pendingTableContainer">
                 <!-- Si no hay prestamos pendientes -->
                 <div v-if="pendingLoans.length == 0" class="container center">
-                    <img style="width: 300px;" src="../assets/img/todo-bien.png">
-                    <h5>No hay prestamos pendientes</h5>
+                    <h6>No hay resultados</h6>
+                    <br>
+                    <img style="width: 200px;" src="../assets/img/notFound.jpg">
                 </div>
                 <table v-if="pendingLoans.length != 0" class="responsive-table">
                     <thead>
@@ -109,8 +110,9 @@
             <div class="returnedTableContainer">
                 <!-- Si no hay registro -->
                 <div v-if="returnedLoans.length == 0" class="container center">
-                    <img style="width: 300px;" src="../assets/img/todo-bien.png">
-                    <h5>No hay registro por mostrar</h5>
+                    <h6>No hay resultados</h6>
+                    <br>
+                    <img style="width: 200px;" src="../assets/img/notFound.jpg">
                 </div>
                 <table v-if="returnedLoans.length != 0" class="responsive-table">
                     <thead>

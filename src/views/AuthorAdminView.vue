@@ -137,8 +137,8 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="section center">
-                <h3>Administrar autores</h3>
+            <div class="section">
+                <h3 class="center">Administrar autores</h3>
                 <br><br>
                 <div class="input-field">
                     <i class="material-icons prefix">search</i>
@@ -146,7 +146,12 @@
                     <label for="search">Buscar</label>
                 </div>
                 <div class="tableContainer">
-                    <table class="highlight responsive-table">
+                    <div v-if="authorsList.length == 0" class="container center">
+                        <h6>No hay resultados</h6>
+                        <br>
+                        <img style="width: 200px;" src="../assets/img/notFound.jpg">
+                    </div>
+                    <table v-if="authorsList.length > 0" class="highlight responsive-table">
                         <thead>
                             <tr>
                                 <th>Id</th>
