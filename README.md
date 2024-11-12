@@ -27,6 +27,17 @@ A nivel de dependencias:
 - vue-router 4.4.5
 - axios 1.7.7
 
+
+## Docker Setup
+```sh
+npm run build
+# Esperar a que se complete el proceso
+# Cuando el archivo /dist se haya creado, crear docker
+docker build -t bookscenterweb .
+# Iniciar
+docker run -p 8080:80 bookscenterweb
+```
+
 ## Project setup
 ```
 npm install
