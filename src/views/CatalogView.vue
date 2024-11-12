@@ -64,7 +64,7 @@
                         <br>
                         <h6>No hay resultados...</h6>
                         <br>
-                        <img src="../assets/img/notFound.jpg">
+                        <img style="width: 250px;" class="circle" src="../assets/img/notFound.jpg">
                     </div>
                     <div v-for="book in bookList" :key="book.catalogId+'-'+book.bookId">
                         <BookCardComponent

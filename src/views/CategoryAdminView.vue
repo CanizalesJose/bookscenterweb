@@ -41,7 +41,7 @@
                     <div v-if="categories.length == 0" class="container center">
                         <h6>No hay resultados</h6>
                         <br>
-                        <img style="width: 200px;" src="../assets/img/notFound.jpg">
+                        <img class="circle" style="width: 200px;" src="../assets/img/notFound.jpg">
                     </div>
                     <!-- Construir tabla con datos de categorias -->
                     <table v-if="categories.length > 0" class="highlight responsive-table">

@@ -200,7 +200,12 @@
                 <label for="search">Buscar</label>
             </div>
             <div class="usersTableContainer">
-                <table class="highlight responsive-table">
+                <div v-if="usersList.length == 0" class="container center">
+                    <h6>No hay resultados</h6>
+                    <br>
+                    <img class="circle" style="width: 200px;" src="../assets/img/notFound.jpg">
+                </div>
+                <table v-if="usersList.length != 0" class="highlight responsive-table">
                     <thead>
                         <tr>
                             <th>Nombre de usuario</th>

@@ -188,7 +188,7 @@
                         <div v-if="booksInCatalog.length == 0" class="container center">
                             <h6>No hay resultados</h6>
                             <br>
-                            <img style="width: 200px;" src="../assets/img/notFound.jpg">
+                            <img class="circle" style="width: 200px;" src="../assets/img/notFound.jpg">
                         </div>
                         <table v-if="booksInCatalog.length > 0" class="highlight responsive-table">
                             <thead>
@@ -280,7 +280,7 @@
                         <div v-if="booksNotInCatalogList.length == 0" class="container center">
                             <h6>No hay resultados</h6>
                             <br>
-                            <img style="width: 200px;" src="../assets/img/notFound.jpg">
+                            <img class="circle" style="width: 200px;" src="../assets/img/notFound.jpg">
                         </div>
                         <table v-if="booksNotInCatalogList.length > 0" class="highlight responsive-table">
                             <thead>

@@ -38,7 +38,7 @@
                 <div v-if="pendingLoans.length == 0" class="container center">
                     <h6>No hay resultados</h6>
                     <br>
-                    <img style="width: 200px;" src="../assets/img/notFound.jpg">
+                    <img class="circle" style="width: 200px;" src="../assets/img/notFound.jpg">
                 </div>
                 <table v-if="pendingLoans.length != 0" class="responsive-table">
                     <thead>
@@ -112,7 +112,7 @@
                 <div v-if="returnedLoans.length == 0" class="container center">
                     <h6>No hay resultados</h6>
                     <br>
-                    <img style="width: 200px;" src="../assets/img/notFound.jpg">
+                    <img class="circle" style="width: 200px;" src="../assets/img/notFound.jpg">
                 </div>
                 <table v-if="returnedLoans.length != 0" class="responsive-table">
                     <thead>
