@@ -12,12 +12,15 @@
                         <tr>
                             <th>Username:</th>
                             <th>Tipo de usuario:</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>{{ user.username }}</td>
                             <td>{{ user.usertype }}</td>
+                            <td v-if="!user.penalized">Al corriente</td>
+                            <td v-if="user.penalized">Penalizado</td>
                         </tr>
                     </tbody>
                 </table>
@@ -48,7 +51,7 @@
             </div>
             <div class="col s7 center">
                 <div v-if="loansList.length == 0">
-                    <img style="width: 200px;" src="../assets/img/sinPrestamosUsuario.jpg">
+                    <img class="circle" style="width: 200px;" src="../assets/img/sinPrestamosUsuario.png">
                     <h6>Sin registro de libros prestados</h6>
                 </div>
                 <div class="tableContainer">

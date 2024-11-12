@@ -23,7 +23,6 @@
                 <button v-if="randomPassword == null" class="btn-flat" @click="generatePassword()">
                     Generar contraseña segura <i class="material-icons right">send</i>
                 </button>
-                <p>{{ randomPassword }}</p>
             </div>
             <div class="input-field">
                 <select v-model="selUsertype" id="newUsertype">
@@ -96,8 +95,6 @@
                 <button v-if="randomPassword == null" class="btn-flat" @click="generatePassword()">
                     Generar contraseña segura <i class="material-icons right">send</i>
                 </button>
-                <p>{{ randomPassword }}</p>
-                <br>
             </div>
             <div class="input-field">
                 <select id="changedType" v-model="selUsertype">
@@ -107,8 +104,6 @@
                 </select>
                 <label for="changedType">Nuevo tipo de usuario:</label>
             </div>
-            
-
             <p>¿Estás seguro de querer actualizar este registro?</p>
             <br>
             <p>El nuevo registro quedará de la siguiente manera:</p>
@@ -199,40 +194,51 @@
             <div class="section center">
                 <h3>Gestión de usuarios</h3>
             </div>
-
-            <table class="highlight responsive-table">
-                <thead>
-                    <tr>
-                        <th>Nombre de usuario</th>
-                        <th>Tipo de usuario</th>
-                        <th>Numero Telefonico</th>
-                        <th>Correo Electronico</th>
-                        <th>Entregas atrasadas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="user in usersListPagination" :key="user.username">
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.usertype }}</td>
-                        <td>{{ user.contactNumber }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            <div v-if="user.penalized">Si</div>
-                            <div v-else>No</div>
-                        </td>
-                        <td>
-                            <button @click="updateModal(user.username, null, user.usertype, user.contactNumber, user.email)" class="btn-floating waves-effect waves-light green lighten-1">
-                                <i class="material-icons prefix">edit</i>
-                            </button>
-                        </td>
-                        <td>
-                            <button @click="deleteModal(user.username, user.usertype, user.contactNumber, user.email)" class="btn-floating waves-effect waves-light red lighten-1">
-                                <i class="material-icons prefix">delete</i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="input-field">
+                <i class="material-icons prefix">search</i>
+                <input class="tooltipped" data-position="left" data-tooltip="Presiona Enter para buscar" type="text" id="search" v-model="searchText" @keyup.enter="performSearch()">
+                <label for="search">Buscar</label>
+            </div>
+            <div class="usersTableContainer">
+                <div v-if="usersList.length == 0" class="container center">
+                    <h6>No hay resultados</h6>
+                    <br>
+                    <img class="circle" style="width: 200px;" src="../assets/img/notFound.jpg">
+                </div>
+                <table v-if="usersList.length != 0" class="highlight responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre de usuario</th>
+                            <th>Tipo de usuario</th>
+                            <th>Numero Telefonico</th>
+                            <th>Correo Electronico</th>
+                            <th>Entregas atrasadas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="user in usersListPagination" :key="user.username">
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.usertype }}</td>
+                            <td>{{ user.contactNumber }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <div v-if="user.penalized">Si</div>
+                                <div v-else>No</div>
+                            </td>
+                            <td>
+                                <button @click="updateModal(user.username, null, user.usertype, user.contactNumber, user.email)" class="btn-floating waves-effect waves-light green lighten-1">
+                                    <i class="material-icons prefix">edit</i>
+                                </button>
+                            </td>
+                            <td>
+                                <button @click="deleteModal(user.username, user.usertype, user.contactNumber, user.email)" class="btn-floating waves-effect waves-light red lighten-1">
+                                    <i class="material-icons prefix">delete</i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <ul class="pagination">
                 <li class="waves-effect" :class="{ 'disabled': currentPage === 1 }">
                     <a href="#" @click.prevent="changePage(currentPage - 1)">«</a>
@@ -257,6 +263,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
 
 const verifyAdmin = inject('verifyAdmin');
 const usersList = ref([]);
+const searchText = ref(null);
 const selUsername = ref(null);
 const selPassword = ref(null);
 const selUsertype = ref(null);
@@ -267,7 +274,7 @@ const checkEmail = /^[a-zA-Z0-9]+\@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
 const checkNumber = /^[0-9]{10}|[0-9]{3}-[0-9]{3}-[0-9]{4}$/
 
 const currentPage = ref(1);
-const rowsPerPage = 10;
+const rowsPerPage = 6;
 const usersListPagination = computed(() => {
     const start = (currentPage.value - 1) * rowsPerPage;
     return usersList.value.slice(start, start + rowsPerPage);
@@ -412,7 +419,7 @@ async function confirmDelete(){
         let index = usersList.value.findIndex(user => user.username === selUsername.value);
         if (index != -1){
             usersList.value.splice(index, 1);
-            M.toast({html: `Usuario eliminado`, classes: 'red darken-4'});
+            M.toast({html: `Usuario eliminado`, classes: 'red'});
         }
     })
     .catch(error => {
@@ -474,10 +481,34 @@ function generatePassword(){
     })
     .then(res => {
         randomPassword.value = res.data.random_password;
+        selPassword.value = randomPassword.value;
+        navigator.clipboard.writeText(randomPassword.value);
+        setTimeout(() => {
+            M.updateTextFields();
+        }, 0);
+        M.toast({html: `Contraseña generada copiada!`, classes: 'green'})
     })
     .catch(error => {
         M.toast({html: error.message});
     });
+}
+function performSearch(){
+    if (searchText.value.length == 0){
+        fetchUsers();
+    }else {
+        // Realizar la busqueda
+        axios.get(`${process.env.VUE_APP_API_URL}/users/findByUsername/${searchText.value}`, {
+            headers: {
+                token: localStorage.getItem('token')
+            }
+        })
+        .then(res => {
+            usersList.value = res.data;
+        })
+        .catch(error => {
+            M.toast({html: `Error en la petición: ${error.message}`, classes: 'yellow darken-4'});
+        });
+    }
 }
 </script>
 
@@ -496,5 +527,8 @@ table th, table td {
 }
 .parallax-container {
     height: 200px;
+}
+.usersTableContainer {
+    height: 410px;
 }
 </style>
