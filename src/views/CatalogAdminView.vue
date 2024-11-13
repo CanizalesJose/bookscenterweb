@@ -589,6 +589,8 @@ async function addToCatalogModal(bookId, cover, title, author, category){
     modalInstance.open();
     setTimeout(() => {
         M.updateTextFields();
+        let textArea = document.getElementById('updateSummary');
+        M.textareaAutoResize(textArea);
     }, 0);
 }
 async function confirmAddToCatalog(){
